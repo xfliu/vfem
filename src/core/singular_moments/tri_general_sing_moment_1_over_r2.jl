@@ -1,4 +1,4 @@
-# src/singular_moments/tri_general_sing_moment_1_over_r2.jl
+# src/core/singular_moments/tri_general_sing_moment_1_over_r2.jl
 #
 # General-triangle 1/r² moment via signed decomposition into origin-based
 # polar sub-triangles using the *interior angle at the origin* (rather

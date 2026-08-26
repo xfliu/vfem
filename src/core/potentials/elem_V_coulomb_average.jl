@@ -1,4 +1,4 @@
-# src/potentials/elem_V_coulomb_average.jl
+# src/core/potentials/elem_V_coulomb_average.jl
 #
 # Port of VFEM3D/lib/eigensolve/potentials/elem_V_coulomb_average.m.
 #

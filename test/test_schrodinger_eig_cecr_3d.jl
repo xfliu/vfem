@@ -1,6 +1,6 @@
 # test/test_schrodinger_eig_cecr_3d.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. cube_r1, V = 0, neig = 4: Liu's CR Liu lower bound `eig_lower` and
 #      raw CECR `eig_h` match MATLAB to ≤ 1e-9. C_h matches to ≤ 1e-12.
 #   2. cube_r1, V(x,y,z) = x²+y²+z², neig = 4: same comparison. The
@@ -14,7 +14,7 @@
 #      V_input of wrong length -> DimensionMismatch.
 #   7. Performance: < 5 s on this fixture.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For the Dirichlet truncated Schrödinger operator on a 3D domain Ω,
 #   every CECR FE eigenvalue ν_h is a numerical upper bound on the
 #   truncated problem and the Liu correction

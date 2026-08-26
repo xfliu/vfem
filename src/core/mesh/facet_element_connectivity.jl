@@ -1,4 +1,4 @@
-# src/mesh/facet_element_connectivity.jl
+# src/core/mesh/facet_element_connectivity.jl
 #
 # Port of VFEM3D/lib/mesh/mesh_get_Facet2Element.m and
 # mesh_get_Facet2Element_with_sign_fast.m.

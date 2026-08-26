@@ -1,6 +1,6 @@
-# test_cases/make_equilateral_report.jl
+# examples/make_equilateral_report.jl
 #
-# Generate `equilateral_triangle_report.html` next to this script: a
+# Generate `docs/reports/equilateral_triangle_report.html`: a
 # detailed convergence-and-eigenfunction report on the Dirichlet
 # Laplace eigenvalue case study, comparing
 #
@@ -16,7 +16,7 @@
 # embedded inline as JSON.
 #
 # Run with:
-#     julia --project=. test_cases/make_equilateral_report.jl
+#     julia --project=. examples/make_equilateral_report.jl
 
 using Printf
 using Dates
@@ -473,7 +473,7 @@ html = """
 
 <h1>Dirichlet Laplace eigenvalues on the equilateral triangle</h1>
 <div class="meta">
-  Generated $(today) by <code>test_cases/make_equilateral_report.jl</code>
+  Generated $(today) by <code>examples/make_equilateral_report.jl</code>
   &middot; VFEM.jl
 </div>
 
@@ -591,8 +591,8 @@ $rate_html
 </ul>
 
 <footer>
-  Source: <code>test_cases/laplace_equilateral_triangle.jl</code> (case)
-  + <code>test_cases/make_equilateral_report.jl</code> (this report).
+  Source: <code>examples/laplace_equilateral_triangle.jl</code> (case)
+  + <code>examples/make_equilateral_report.jl</code> (this report).
   Library: VFEM.jl. Plots rendered with
   <a href="https://plotly.com/javascript/">Plotly.js</a> via CDN.
 </footer>
@@ -710,7 +710,7 @@ const DATA = $data_json;
 </html>
 """
 
-out_path = joinpath(@__DIR__, "equilateral_triangle_report.html")
+out_path = joinpath(@__DIR__, "..", "docs", "reports", "equilateral_triangle_report.html")
 write(out_path, html)
 println("Wrote $(out_path)")
 println("  size = $(round(filesize(out_path) / 1024; digits = 1)) KB")

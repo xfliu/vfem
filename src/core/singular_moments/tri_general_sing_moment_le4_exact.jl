@@ -1,4 +1,4 @@
-# src/singular_moments/tri_general_sing_moment_le4_exact.jl
+# src/core/singular_moments/tri_general_sing_moment_le4_exact.jl
 #
 # Decompose a general triangle into three signed origin-based polar
 # sub-triangles and sum the closed-form 1/r moments.

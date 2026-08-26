@@ -1,2 +1,16 @@
+# OS junk
 .DS_Store
+Thumbs.db
+
+# Local git plumbing (this checkout keeps its git dir out of the way)
 .git-real/
+
+# Resolved environment: pins an absolute local path for the unregistered
+# Veigs dependency, so it is not portable. Regenerate with `Pkg.instantiate`.
+Manifest.toml
+
+# Julia build/coverage artifacts
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+/docs/build/

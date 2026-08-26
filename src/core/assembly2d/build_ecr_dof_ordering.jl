@@ -1,4 +1,4 @@
-# src/assembly2d/build_ecr_dof_ordering.jl
+# src/core/assembly2d/build_ecr_dof_ordering.jl
 #
 # Port of vfem2d/lib/fem_assembly/build_ecr_dof_ordering.m.
 #

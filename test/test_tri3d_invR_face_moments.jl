@@ -1,6 +1,6 @@
 # test/test_tri3d_invR_face_moments.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. max_degree = 0 returns just F[1,1,1] (the planar potential I00).
 #   2. Equilateral triangle in z = 1 plane (analytic h, simple geometry).
 #   3. MATLAB cross-check on the canonical face_nodes panel from
@@ -15,7 +15,7 @@
 #   8. F[1,1,1] (b1=b2=b3=0) is the planar potential = I00 / area_jac.
 #   9. Performance: max_degree = 4 (35 entries) < 50 ms.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   F[b1+1, b2+1, b3+1] = ∫_Δ μ₁^b1 μ₂^b2 μ₃^b3 / |μ₁·a + μ₂·b + μ₃·c| dμ
 #   over the unit reference triangle Δ in (μ₁, μ₂, μ₃) coords with
 #   μ₁ + μ₂ + μ₃ = 1. Cross-validated against MATLAB R2024a fixture

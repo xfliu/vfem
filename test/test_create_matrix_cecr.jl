@@ -1,6 +1,6 @@
 # test/test_create_matrix_cecr.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. UnitSquare8x8 fixture, c = 0.5 constant: trace, sum, Frobenius
 #      match MATLAB to ~1e-10.
 #   2. c = 0 reduces to plain enriched CR exactly.
@@ -9,7 +9,7 @@
 #   4. c_data forms: scalar, function (x, y) -> Real, vector all match.
 #   5. Wrong-length vector c -> DimensionMismatch.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   A_cecr = A_ecr_exact + diag(c_K · |K|) on cell DOFs.
 #   M_cecr = M_ecr_exact (since b̂ uses only the first component).
 

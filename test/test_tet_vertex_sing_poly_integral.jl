@@ -1,13 +1,13 @@
 # test/test_tet_vertex_sing_poly_integral.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. p = q = 1 (constant) reduces to bare ∫_K 1/|x-P_s| dx.
 #   2. MATLAB fixture: cp = δ_1 + 0.5·δ_5,  cq = δ_3 - 0.25·δ_8 at N = 2.
 #   3. Bilinearity: poly_integral(αp, q) == α·poly_integral(p, q).
 #   4. Symmetry: poly_integral(p, q) == poly_integral(q, p).
 #   5. Length mismatch -> DimensionMismatch.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   value = ∫_K p(x) · q(x) / |x - P_s| dx
 #   where p, q are tetrahedral Bernstein polynomials given by
 #   coefficient vectors `coeff_p`, `coeff_q` ordered by ijkl_list.

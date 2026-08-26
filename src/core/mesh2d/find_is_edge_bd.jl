@@ -1,4 +1,4 @@
-# src/mesh2d/find_is_edge_bd.jl
+# src/core/mesh2d/find_is_edge_bd.jl
 #
 # Port of vfem2d/lib/fem_assembly/find_is_edge_bd.m. Returns the
 # 0/1 indicator vector of which edges are on the boundary, via a

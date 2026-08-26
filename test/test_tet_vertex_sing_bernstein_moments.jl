@@ -1,6 +1,6 @@
 # test/test_tet_vertex_sing_bernstein_moments.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. N = 0 returns a single moment ∫_K 1/|x-P_s| dx (= face_jac × beta).
 #   2. MATLAB R2024a fixture cross-check at N = 2.
 #   3. Sum invariant: Σ_k C(N;γ_k)·1 / multinomial · S[k] equals the
@@ -11,7 +11,7 @@
 #   6. Negative N -> DomainError.
 #   7. Performance: N = 4 < 100 ms.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   S[k] = ∫_K B_γ_k^N(x) / |x - P_s| dx where γ_k = ijkl_list(N)[k, :]
 #   and P_s = LocalNodes[singular_vertex, :].
 

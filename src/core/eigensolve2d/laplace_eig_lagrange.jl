@@ -1,4 +1,4 @@
-# src/eigensolve2d/laplace_eig_lagrange.jl
+# src/core/eigensolve2d/laplace_eig_lagrange.jl
 #
 # Port of vfem2d/lib_eigenvalue_bound/laplace_eig_lagrange.m for the
 # Lagrange CG (P1, P2, …) Laplace eigenproblem on a 2D triangular mesh

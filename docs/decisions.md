@@ -89,3 +89,32 @@ application, which is the main motivation for VFEM3D in the first
 place. Within that group, prioritise `elem_V_coulomb_average` (the
 input the CECR driver consumes), then `elem_V_coulomb_bernstein` if
 needed for a finer reaction approximation.
+
+## 2026-08-26 — Rounding direction of the truncated Liu 3D constant
+
+`schrodinger_eig_cecr_3d.jl` uses `_LIU_C3D_INV_SQRT = 0.1581`, copied
+verbatim from the MATLAB driver, where the mathematically justified
+value is `1/√40 = 0.158113883…`.
+
+The source comment previously claimed the truncation was "slightly
+tighter, hence safer". **That is backwards.** The Liu correction
+
+    λ_lower = ν / (1 + Ch²·ν)
+
+is *decreasing* in `Ch`. Truncating `Ch` downward therefore *raises*
+`λ_lower`, i.e. it overshoots the certified bound rather than leaving
+margin below it. On the `cube_r1` fixture the overshoot is ~8e-4
+absolute (relative ~1.8e-4 · Ch²ν/(1+Ch²ν)) — far below discretization
+error, but it is a genuine loss of rigour in a library whose output is
+meant to be a proof.
+
+**Decision:** keep `0.1581` for now. Changing it would break every
+MATLAB cross-validation fixture (pinned to 1e-9/1e-10), and the earlier
+decision to treat the MATLAB code as authoritative still stands. The
+comment at the constant has been corrected to state the direction
+honestly, and the caveat is repeated in README.md.
+
+**Open item:** for results that must be rigorous, `Ch` should be carried
+as an interval (or `1/sqrt(40)` rounded *up*), with a separate set of
+fixtures. This is the same fix as the general "carry the constants in
+interval arithmetic" item on the roadmap.

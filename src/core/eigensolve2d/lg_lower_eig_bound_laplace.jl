@@ -1,4 +1,4 @@
-# src/eigensolve2d/lg_lower_eig_bound_laplace.jl
+# src/core/eigensolve2d/lg_lower_eig_bound_laplace.jl
 #
 # Lehmann–Goerisch sharpening of Laplace eigenvalue lower bounds on a
 # 2D mesh. Port of `vfem2d/example_lower_eig_bound_laplace.m`.

@@ -1,4 +1,4 @@
-# src/eigensolve2d/apply_dirichlet_bc.jl
+# src/core/eigensolve2d/apply_dirichlet_bc.jl
 #
 # Generic Dirichlet-BC reducer. Given a mesh, the ECR DOF ordering,
 # and any matrix on the full ECR DOF set, return the submatrix of

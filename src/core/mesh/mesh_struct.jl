@@ -1,4 +1,4 @@
-# src/mesh/mesh_struct.jl
+# src/core/mesh/mesh_struct.jl
 #
 # Tetrahedral mesh data type. Mirrors the field set the MATLAB code
 # threads through everywhere: sorted (1-based) `ElementList`, raw

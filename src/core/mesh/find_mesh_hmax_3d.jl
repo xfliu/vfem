@@ -1,4 +1,4 @@
-# src/mesh/find_mesh_hmax_3d.jl
+# src/core/mesh/find_mesh_hmax_3d.jl
 #
 # Largest tetrahedron-edge length over the mesh. Port of the inline
 # `compute_hmax_3d` helper inside `VFEM3D/schrodinger_eig_cecr_3d.m`.
@@ -29,13 +29,16 @@ function find_mesh_hmax_3d(NodeList::AbstractMatrix, ElementList::AbstractMatrix
             dz = NodeList[v[i], 3] - NodeList[v[j], 3]
             h2 = dx * dx + dy * dy + dz * dz
             h  = sqrt(h2)
-            if h > h_max
+            if _hmax_compare_value(h) > _hmax_compare_value(h_max)
                 h_max = h
             end
         end
     end
     return h_max
 end
+
+_hmax_compare_value(x::Interval) = sup(x)
+_hmax_compare_value(x::Real) = x
 
 """
     find_mesh_hmax_3d(m::Mesh3D) -> Float64

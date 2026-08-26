@@ -1,4 +1,4 @@
-# src/singular_moments/polymul.jl
+# src/core/singular_moments/polymul.jl
 #
 # Convolution of two coefficient vectors. Replaces MATLAB `conv(px, py)`
 # inside the closed-form moment routines. Local helper, not exported.

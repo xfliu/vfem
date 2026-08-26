@@ -1,4 +1,4 @@
-# src/eigensolve3d/schrodinger_eig_cecr_3d.jl
+# src/core/eigensolve3d/schrodinger_eig_cecr_3d.jl
 #
 # Port of VFEM3D/lib/eigensolve/schrodinger_eig_cecr_3d.m.
 #
@@ -15,17 +15,25 @@
 #   5. Apply Liu's lower bound: `λ_lower = ν / (1 + Ch² · ν)` with
 #      optional shift `γ_h` for sign-changing potentials. The 3D ECR
 #      Liu constant is `Ch = h_max / √40 ≈ 0.1581 · h_max` (per
-#      `lib/eigensolve/schrodinger_eig_cecr_3d.m`; see decision.md).
+#      `lib/eigensolve/schrodinger_eig_cecr_3d.m`; see docs/decisions.md).
 
 using Arpack: eigs
 using SparseArrays: SparseMatrixCSC
 using LinearAlgebra: eigen, Symmetric
 
 # Liu's 3D ECR constant. MATLAB `lib/eigensolve/schrodinger_eig_cecr_3d.m`
-# uses the literal `0.1581` (a 4-decimal truncation of `1/√40 ≈ 0.158113883`).
-# We match MATLAB exactly for cross-validation. The difference is below
-# FE accuracy on any practical mesh; either constant is a valid Liu
-# bound (the truncated 0.1581 is slightly tighter, hence safer).
+# uses the literal `0.1581`, a 4-decimal truncation of `1/√40 ≈
+# 0.158113883`. We match MATLAB exactly so the cross-validation
+# fixtures in `test/fixtures/` compare bit-for-bit.
+#
+# CAVEAT — this direction of rounding is NOT conservative. `λ_lower =
+# ν / (1 + Ch²·ν)` is *decreasing* in `Ch`, so the truncated (smaller)
+# constant returns a slightly *larger* lower bound than `1/√40` would.
+# The excess is O(1e-3) absolute on the shipped fixtures (relative size
+# ~1.8e-4 · Ch²ν/(1+Ch²ν)) — below discretization error, but it is an
+# overshoot of the certified Liu bound rather than a margin on it.
+# For results that must be rigorous, use `1/sqrt(40)` rounded *up*, or
+# carry `Ch` as an interval. Tracked in docs/decisions.md.
 const _LIU_C3D_INV_SQRT = 0.1581
 const _DENSE_EIG_THRESHOLD_3D = 1000          # Below this, use dense eigen
                                               # for robust handling of

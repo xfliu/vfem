@@ -1,4 +1,4 @@
-# src/mesh/facet_id_at_element.jl
+# src/core/mesh/facet_id_at_element.jl
 #
 # Port of VFEM3D/lib/mesh/get_facet_id_at_element.m. Given a facet's
 # 3 sorted node indices and an element's 4 sorted node indices, find

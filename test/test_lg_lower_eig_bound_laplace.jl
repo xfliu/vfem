@@ -1,6 +1,6 @@
 # test/test_lg_lower_eig_bound_laplace.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. UnitSquare8x8, lagrange_order = 2, neig = 4: ρ, Ch_cr, the
 #      `neig + 1` Liu-CR lower bounds, the `neig` Lehmann–Goerisch
 #      lower bounds, and the `neig` Lagrange CG upper bounds all match
@@ -14,7 +14,7 @@
 #      RT_order = -1 -> DomainError.
 #   6. Performance: < 30 s on this fixture.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For the homogeneous Dirichlet Laplacian on a Lipschitz domain Ω
 #   in 2D, the Lehmann–Goerisch sharpening combines a CR-based shift
 #   parameter ρ with a Goerisch correction `A_lg` from the RT auxiliary

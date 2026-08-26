@@ -1,4 +1,4 @@
-# test_cases/laplace_equilateral_p5_lg.jl
+# examples/laplace_equilateral_p5_lg.jl
 #
 # Two-sided bound on the first Dirichlet Laplace eigenvalue λ_1 of the
 # equilateral triangle of side 1, using:
@@ -13,7 +13,7 @@
 #        h_max = 0.125, the closest available to the requested h ≈ 0.1).
 #
 # Run with:
-#     julia --project=. test_cases/laplace_equilateral_p5_lg.jl
+#     julia --project=. examples/laplace_equilateral_p5_lg.jl
 
 using Printf
 

@@ -1,6 +1,6 @@
 # test/test_build_ecr_dof_ordering.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Single-element mesh: 3 edges + 1 cell → ndof = 4. Edge DOFs
 #      get [1, 2, 3], cell DOF gets 4.
 #   2. Bijection: every DOF in 1..ndof appears exactly once across

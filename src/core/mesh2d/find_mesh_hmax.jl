@@ -1,4 +1,4 @@
-# src/mesh2d/find_mesh_hmax.jl
+# src/core/mesh2d/find_mesh_hmax.jl
 #
 # Port of vfem2d/lib/fem_assembly/find_mesh_hmax.m. Computes the
 # maximum edge length over all edges. Uses squared distance until

@@ -1,6 +1,6 @@
 # test/test_ijkl_list.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. M = 0 -> single row (0,0,0,0)
 #   2. M = 1 -> 4 rows, vertex DOFs in canonical order:
 #                (1,0,0,0), (0,1,0,0), (0,0,1,0), (0,0,0,1)
@@ -12,7 +12,7 @@
 #   7. all rows are unique
 #   8. negative M -> DomainError
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   Number of rows == simplex_dof(3, M); every (i,j,k,l) with
 #   i+j+k+l = M and i,j,k,l ≥ 0 appears exactly once.
 

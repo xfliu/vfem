@@ -1,4 +1,4 @@
-# src/bernstein/bernstein_product.jl
+# src/core/bernstein/bernstein_product.jl
 #
 # Exact tetrahedral Bernstein-polynomial product. Port of
 # VFEM3D/lib/quadrature/BernsteinProductExact3D.m.

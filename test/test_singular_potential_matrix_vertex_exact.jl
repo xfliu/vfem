@@ -1,6 +1,6 @@
 # test/test_singular_potential_matrix_vertex_exact.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. N = 0 -> 1×1 matrix; equals the bare ∫_K 1/|x-P_s| dx.
 #   2. MATLAB R2024a fixture cross-check at N = 2 (10×10 matrix, 55 entries).
 #   3. Symmetry: T[i,j] == T[j,i].
@@ -8,7 +8,7 @@
 #   5. Performance: N = 2 < 200 ms (the routine evaluates a degree-4
 #      face-moment array internally).
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   T[i,j] = ∫_K B_i^N(x) · B_j^N(x) / |x - P_s| dx,
 #   ordered by ijkl_list(N). Symmetric in (i, j).
 #   For physical potential V(x) = -Z/|x-P_s|, the matrix is -Z·T.

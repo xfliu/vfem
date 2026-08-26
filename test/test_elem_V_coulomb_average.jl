@@ -1,6 +1,6 @@
 # test/test_elem_V_coulomb_average.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Hydrogen-like (single nucleus at origin, Z = 1): per-element
 #      averages on cube_r1 — first 10 entries plus min/max/sum/sumsq —
 #      match MATLAB to ≤ 1e-10. Default Duffy n=10, standard n=4.
@@ -11,7 +11,7 @@
 #   4. Z = 0 gives V_avg ≡ 0.
 #   5. CoulombInfo construction: shape mismatches -> DimensionMismatch.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For V(x) = − Σ_c Z_c / |x − c_c| and a tetrahedron K, the integral
 #   `(1/|K|) ∫_K V dx` is finite (since 1/|x − c| ∈ L¹(ℝ³)). The Duffy
 #   transform near a singularity vertex has Jacobian η₁²·η₂ which

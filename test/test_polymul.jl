@@ -1,6 +1,6 @@
 # test/test_polymul.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. (length 1) × (length 1) — scalar product
 #   2. (length 1) × (length k) — pure scalar scaling
 #   3. (length 2) × (length 2) — known product (1+t)(1+t) = 1+2t+t²
@@ -9,7 +9,7 @@
 #   6. Interval inputs enclose Float64 result entry-wise
 #   7. Performance: 21×21 product < 25 µs.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For random polynomials p, q and random t,
 #       _horner(polymul(p, q), t) ≈ _horner(p, t) * _horner(q, t).
 

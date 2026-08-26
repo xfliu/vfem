@@ -1,4 +1,4 @@
-# src/singular_moments/tri_polar_sing_moment_le4_exact.jl
+# src/core/singular_moments/tri_polar_sing_moment_le4_exact.jl
 #
 # Closed-form value of  ∫_K (1/r) x^m y^n dxdy  on a triangle K with
 # vertices (0,0), (r1,t1), (r2,t2) (latter two in polar coords).

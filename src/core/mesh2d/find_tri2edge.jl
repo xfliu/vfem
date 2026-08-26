@@ -1,4 +1,4 @@
-# src/mesh2d/find_tri2edge.jl
+# src/core/mesh2d/find_tri2edge.jl
 #
 # Port of vfem2d/lib/fem_assembly/find_tri2edge.m.
 #

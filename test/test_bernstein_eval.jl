@@ -1,6 +1,6 @@
 # test/test_bernstein_eval.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. 1D: B_0^0(x) = 1 (degree-0 constant)
 #   2. 1D: B_i^n endpoint values — B_0^n(0) = 1, B_n^n(1) = 1, all others 0.
 #   3. 1D: partition of unity Σ_i B_i^n(x) = 1 for all x.
@@ -12,7 +12,7 @@
 #   8. 3D: c length mismatch -> DimensionMismatch.
 #   9. Performance: 3D evaluation at 100 points, M=4 < 1 ms.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   B_i^n(x) = C(n,i) x^i (1-x)^{n-i}.
 #   B_α^N(L) = C(N;α) L^α with α a tetrahedral multi-index.
 #   Σ_α B_α^N(L) = (L₁+L₂+L₃+L₄)^N = 1 by the multinomial identity.

@@ -1,6 +1,6 @@
 # test/test_dof_on_facet.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. M = 0: facet-DOF count = 1, the single (0,0,0,0) DOF lies on every facet.
 #   2. M = 1: 4 DOFs total; each facet (opposite vertex k) has 3 DOFs (γ[k] == 0).
 #   3. M = 2: 10 DOFs total; each facet has simplex_dof(2, 2) = 6 DOFs.
@@ -11,7 +11,7 @@
 #   7. FacetIdx out of range -> DomainError; equal facets -> ArgumentError.
 #   8. M < 0 -> DomainError.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   A degree-M Bernstein DOF γ ∈ ijkl_list(M) lies on the local face
 #   opposite vertex k iff γ[k] == 0 (i.e. the face restricted to that
 #   plane corresponds to multi-indices with no contribution from k).

@@ -1,4 +1,4 @@
-# src/assembly3d/create_matrix_ecr_3d.jl
+# src/core/assembly3d/create_matrix_ecr_3d.jl
 #
 # Port of VFEM3D/create_matrix_ecr_3d.m.
 #

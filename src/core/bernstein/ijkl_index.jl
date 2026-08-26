@@ -1,4 +1,4 @@
-# src/bernstein/ijkl_index.jl
+# src/core/bernstein/ijkl_index.jl
 #
 # Lookup: given the canonical `ijkl_list(M)` matrix and a target
 # multi-index, return the row index. Port of get_ijkl_idx.m.

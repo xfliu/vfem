@@ -1,4 +1,4 @@
-# src/eigensolve2d/verified_lg_lower_eig.jl
+# src/core/eigensolve2d/verified_lg_lower_eig.jl
 #
 # Verified-mode building blocks for the 2D Lehmann–Goerisch lower-bound
 # pipeline. Pairs with `lg_lower_eig_bound_laplace.jl` (Float64 path).
@@ -22,7 +22,7 @@
 # RT verified solve (the missing piece for a fully rigorous LG pipeline)
 # is an open research item — Veigs.jl provides `interval_ldl` for
 # symmetric (incl. indefinite) factorization, but no Krawczyk-style
-# verified solver for arbitrary linear systems. Tracked in plan.md.
+# verified solver for arbitrary linear systems. Tracked in the README roadmap.
 
 using LinearAlgebra: Symmetric
 using IntervalArithmetic: Interval, interval, inf, sup, mid, hull

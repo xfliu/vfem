@@ -1,6 +1,6 @@
 # test/test_create_matrix_ecr_3d.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. cube_r1 fixture (40 elements, 104 facets, 144 DOFs): trace, sum,
 #      Frobenius and nnz of both A and M match MATLAB R2024a to ≤ 1e-10.
 #   2. Symmetry: A ≈ A', M ≈ M'.
@@ -14,7 +14,7 @@
 #      to round-off; interval widths < 1e-10.
 #   7. Performance: < 5 s on this small fixture.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   The ECR finite element on tetrahedra has 5 DOFs per element: 4
 #   face-midpoint averages (CR basis φ_i = 1 − 3 L_i) and 1 cell-average
 #   enrichment (q = |x|² normalized to vanish on face averages). All

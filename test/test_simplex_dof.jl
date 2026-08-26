@@ -1,6 +1,6 @@
 # test/test_simplex_dof.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. n = 0 (point) -> always 1 (constant only)
 #   2. M = 0 -> always 1 (constant)
 #   3. n = 1 (interval), M up to 5: M+1

@@ -1,6 +1,6 @@
 # test/test_laplace_eig_lagrange.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. P1 on UnitSquare8x8: matrix invariants (size, trace, sum, Frobenius
 #      for both A and M), the first 6 Dirichlet Laplace eigenvalues, and
 #      the per-column norms of `eig_func` match MATLAB to ~1e-10 / ~1e-9.
@@ -16,7 +16,7 @@
 #   6. order = 0 -> ArgumentError; neig = 0 -> DomainError.
 #   7. Performance: < 5 s on this fixture for both P1 and P2.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For the homogeneous Dirichlet Laplacian on the unit square, the
 #   first eigenvalue is 2π² ≈ 19.7392. The Lagrange CG approximation
 #   converges from above: λ_h ≥ λ_true. The lowest CG eigenvalue

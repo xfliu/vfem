@@ -1,6 +1,6 @@
 # test/test_bernstein_product.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Constant × constant: B^0 · B^0 = B^0 with c_new = c1·c2.
 #   2. Bernstein basis function × Bernstein basis function (single pair).
 #   3. Polynomial × constant 1: result must equal the original polynomial.
@@ -10,7 +10,7 @@
 #   6. Negative degrees -> DomainError.
 #   7. Performance: N=2 × N=2 (DOF 10 × 10) < 100 µs.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For p = Σ_α c1_α B_α^N and q = Σ_β c2_β B_β^M, the returned d_γ
 #   represents p·q in degree N+M. We verify by evaluating both forms
 #   at random points L (4 barycentric coords summing to 1).

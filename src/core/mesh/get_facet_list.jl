@@ -1,4 +1,4 @@
-# src/mesh/get_facet_list.jl
+# src/core/mesh/get_facet_list.jl
 #
 # Port of VFEM3D/lib/mesh/get_FacetList.m. Given an `ElementList`
 # (NumElt × 4, 1-based, rows sorted ascending), enumerate every

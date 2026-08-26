@@ -1,4 +1,4 @@
-# src/potentials/elem_V_coulomb_Lp_integral_3d.jl
+# src/core/potentials/elem_V_coulomb_Lp_integral_3d.jl
 #
 # Port of VFEM3D/lib/eigensolve/potentials/elem_V_coulomb_Lp_integral_3d.m.
 #

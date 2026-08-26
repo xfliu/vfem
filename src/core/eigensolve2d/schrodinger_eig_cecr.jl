@@ -1,4 +1,4 @@
-# src/eigensolve2d/schrodinger_eig_cecr.jl
+# src/core/eigensolve2d/schrodinger_eig_cecr.jl
 #
 # Port of vfem2d/lib_eigenvalue_bound/schrodinger_eig_cecr.m.
 #

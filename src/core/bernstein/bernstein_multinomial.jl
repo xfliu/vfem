@@ -1,4 +1,4 @@
-# src/bernstein/bernstein_multinomial.jl
+# src/core/bernstein/bernstein_multinomial.jl
 #
 # The multinomial factor C(N;α) = N! / (α₁! α₂! α₃! α₄!) for tetrahedral
 # Bernstein basis functions B_α^N = C(N;α) · L^α.

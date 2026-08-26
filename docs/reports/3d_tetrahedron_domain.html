@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3D Tetrahedron Domain: Verified CR Eigenproblem</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1f2933;
+      --muted: #5b6773;
+      --line: #d9e2ec;
+      --panel: #f8fafc;
+      --accent: #0f766e;
+      --accent-2: #7c2d12;
+      --bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 15px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 32px 20px 56px;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 22px;
+      margin-bottom: 28px;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 750;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-top: 34px;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin: 10px 0;
+      color: var(--muted);
+      max-width: 840px;
+    }
+
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    pre {
+      margin: 12px 0 0;
+      padding: 14px;
+      overflow-x: auto;
+      background: #0f172a;
+      color: #e5e7eb;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .kicker {
+      display: inline-block;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0 4px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px;
+      background: var(--panel);
+    }
+
+    .metric .label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .metric .value {
+      margin-top: 5px;
+      font-size: 24px;
+      font-weight: 750;
+    }
+
+    .section {
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+      margin-top: 28px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 16px;
+      background: var(--panel);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 9px;
+      text-align: right;
+      vertical-align: top;
+    }
+
+    th:first-child,
+    td:first-child {
+      text-align: left;
+      width: 64px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      background: #f1f5f9;
+    }
+
+    tbody tr:last-child td { border-bottom: 0; }
+
+    .ok {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .note {
+      border-left: 4px solid var(--accent-2);
+      padding: 10px 14px;
+      background: #fff7ed;
+      color: #7c2d12;
+      margin-top: 14px;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .formula {
+      color: var(--ink);
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      overflow-x: auto;
+    }
+
+    .mono { font-variant-numeric: tabular-nums; }
+
+    @media (max-width: 780px) {
+      main { padding: 24px 14px 44px; }
+      .grid,
+      .two-col { grid-template-columns: 1fr; }
+      th, td { padding: 9px 6px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <span class="kicker">VFEM.jl case report</span>
+      <h1>3D Tetrahedron Domain: Verified Crouzeix-Raviart Eigenproblem</h1>
+      <p>
+        This report records the interval assembly and verified discrete
+        eigenvalue solve for the Dirichlet Laplacian on the fundamental
+        tetrahedron domain described in <code>special_tetrahedron.md</code>.
+      </p>
+    </header>
+
+    <section>
+      <h2>Domain</h2>
+      <p>
+        The benchmark domain is the fundamental tetrahedron
+        <span class="mono">T<sub>F</sub></span> with vertices
+      </p>
+      <div class="formula mono">
+        P<sub>0</sub> = (0, 0, 0),<br>
+        P<sub>1</sub> = (0, 0, 1),<br>
+        P<sub>2</sub> = (1/2, 1/2, 1/2),<br>
+        P<sub>3</sub> = (-1/2, 1/2, 1/2).
+      </div>
+      <p>
+        Its exact volume is <span class="mono">|T<sub>F</sub>| = 1/12</span>.
+        The point coordinates are binary rationals, so they are exactly
+        represented in <code>Float64</code> and become degenerate intervals
+        when promoted by <code>IntervalArithmetic.interval</code>.
+      </p>
+      <p class="note">
+        A single tetrahedron has only boundary facet DOFs for the Dirichlet
+        CR space. The implemented benchmark therefore splits
+        <span class="mono">T<sub>F</sub></span> into four tetrahedra by adding
+        the centroid <span class="mono">(0, 1/4, 1/2)</span>, producing a
+        nontrivial six-dimensional interior CR space.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Mesh And Space</h2>
+      <div class="grid">
+        <div class="metric">
+          <div class="label">Nodes</div>
+          <div class="value">5</div>
+        </div>
+        <div class="metric">
+          <div class="label">Tetrahedra</div>
+          <div class="value">4</div>
+        </div>
+        <div class="metric">
+          <div class="label">Facets</div>
+          <div class="value">10</div>
+        </div>
+        <div class="metric">
+          <div class="label">Interior CR DOFs</div>
+          <div class="value">6</div>
+        </div>
+      </div>
+      <p>
+        The local CR basis on each tetrahedron is
+        <span class="mono">φ<sub>i</sub> = 1 - 3L<sub>i</sub></span>,
+        where <span class="mono">L<sub>i</sub></span> is the barycentric
+        coordinate associated with vertex <span class="mono">i</span>.
+        Each basis function has unit average on its opposite face and zero
+        average on the other three faces.
+      </p>
+    </section>
+
+    <section class="section two-col">
+      <div>
+        <h2>Assembly</h2>
+        <p>
+          The global matrices are assembled by
+          <code>create_matrix_crouzeix_raviart_3d</code>. With
+          <code>T = Interval{Float64}</code>, all local geometric operations
+          and matrix entries are interval-valued.
+        </p>
+        <div class="formula mono">
+          M<sub>ij</sub><sup>K</sup> = ∫<sub>K</sub> φ<sub>i</sub> φ<sub>j</sub> dx<br>
+          A<sub>ij</sub><sup>K</sup> = ∫<sub>K</sub> ∇φ<sub>i</sub> · ∇φ<sub>j</sub> dx
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Local mass entries</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Case</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>i = j</td>
+              <td class="mono">2|K| / 5</td>
+            </tr>
+            <tr>
+              <td>i ≠ j</td>
+              <td class="mono">-|K| / 20</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Verified Discrete Eigenvalues</h2>
+      <p>
+        The Dirichlet generalized eigenproblem is formed by restricting
+        the interval matrices to interior facet DOFs and solving
+        <span class="mono">A u = λ M u</span> with <code>Veigs</code>.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>k</th>
+            <th>inf(λ<sub>k</sub>)</th>
+            <th>sup(λ<sub>k</sub>)</th>
+            <th>width</th>
+          </tr>
+        </thead>
+        <tbody class="mono">
+          <tr>
+            <td>1</td>
+            <td>39.99999999999778</td>
+            <td>40.00000000400221</td>
+            <td>4.0044e-9</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>58.50834389228623</td>
+            <td>58.508343898142144</td>
+            <td>5.8559e-9</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>89.99999999999739</td>
+            <td>90.00000000900256</td>
+            <td>9.0052e-9</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>134.9999999999979</td>
+            <td>135.0000000135021</td>
+            <td>1.3504e-8</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>134.9999999999979</td>
+            <td>135.0000000135021</td>
+            <td>1.3504e-8</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>328.1583227743733</td>
+            <td>328.1583227743825</td>
+            <td>9.2086e-12</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Status: <span class="ok">verified intervals enclose the corresponding
+        Float64 generalized eigenvalues of the same discrete CR pencil.</span>
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>Reproduction</h2>
+      <pre><code>using VFEM, IntervalArithmetic
+
+m = special_tetrahedron_mesh()
+r = verified_cr_laplace_3d(m, 6)
+
+println((m.NumNode, m.NumElt, m.NumF, length(r.dof.interior_dofs)))
+foreach(enumerate(r.eig_value)) do (k, lambda)
+    println(k, " ", inf(lambda), " ", sup(lambda))
+end</code></pre>
+    </section>
+  </main>
+</body>
+</html>

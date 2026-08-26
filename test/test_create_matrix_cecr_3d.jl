@@ -1,6 +1,6 @@
 # test/test_create_matrix_cecr_3d.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. cube_r1 fixture, c = ones(NumElt): trace, sum, Frobenius, nnz of A
 #      and tr(M) match MATLAB to ≤ 1e-10. The reaction adds Σ_e |K_e| =
 #      |Ω| = 1 to the cell-DOF diagonal entries → tr(A) increases by 1
@@ -13,7 +13,7 @@
 #   5. c_data length mismatch -> DimensionMismatch.
 #   6. Performance: < 5 s on this fixture.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   The CECR reaction term is `c_K · ∫_K (Π₀ u)(Π₀ v) dx = c_K · |K_e|
 #   · u_cell · v_cell`. It contributes to A only on the diagonal entry
 #   indexed by the cell-average DOF of element e.

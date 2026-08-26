@@ -1,4 +1,4 @@
-# src/assembly2d/create_matrix_enriched_crouzeix_raviart.jl
+# src/core/assembly2d/create_matrix_enriched_crouzeix_raviart.jl
 #
 # Port of vfem2d/lib/fem_assembly/create_matrix_enriched_crouzeix_raviart.m.
 #

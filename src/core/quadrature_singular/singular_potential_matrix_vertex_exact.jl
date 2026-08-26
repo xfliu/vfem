@@ -1,4 +1,4 @@
-# src/quadrature_singular/singular_potential_matrix_vertex_exact.jl
+# src/core/quadrature_singular/singular_potential_matrix_vertex_exact.jl
 #
 # Port of VFEM3D/lib/quadrature/singular_potential_matrix_vertex_exact.m.
 #

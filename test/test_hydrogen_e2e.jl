@@ -1,6 +1,6 @@
 # test/test_hydrogen_e2e.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. End-to-end Hydrogen-like Liu lower bound on cube_r1: a single
 #      Z=1 nucleus at (0.1, 0.1, 0.1), neig = 4, gamma_h_override = 0.3
 #      (the paper's Hydrogen value). Compares h_max, C_h, raw eig_h,

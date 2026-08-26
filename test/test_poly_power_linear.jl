@@ -1,6 +1,6 @@
 # test/test_poly_power_linear.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. p = 0       -> [1]   (the empty product)
 #   1b. (c0+c1*t)^0 with c0,c1=0 -> [1]
 #   2. p = 1       -> [c0, c1]
@@ -12,7 +12,7 @@
 #   8. Interval inputs: result encloses the Float64 result entry-wise.
 #   9. Performance: p = 50 must run < 50 µs.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   Σ_{k=0}^{p} coeff[k+1] · t^k  ≡  (c0 + c1·t)^p   for all t ∈ ℝ.
 #   Verified by evaluating both sides at random t and checking equality.
 

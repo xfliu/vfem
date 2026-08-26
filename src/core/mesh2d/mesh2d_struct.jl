@@ -1,4 +1,4 @@
-# src/mesh2d/mesh2d_struct.jl
+# src/core/mesh2d/mesh2d_struct.jl
 #
 # 2D triangular mesh data type. Mirrors the field set in
 # vfem2d/lib/mesh/read_mesh_from_folder.m so call sites stay

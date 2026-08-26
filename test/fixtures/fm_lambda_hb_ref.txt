@@ -1,0 +1,74 @@
+# test/fixtures/fm_lambda_hb_ref.txt
+#
+# Reference values for lambda_{h,B} on the Fujino-Morley space over the uniform
+# 1/n mesh of K_{1,theta}, from the validated reference implementation of the
+# inverse-free replacement of Lemma 3.2 (Galindo / Ike / Liu). Float64
+# round-trip digits.
+#
+# lambda_consistent = sign-consistent (mathematically correct) assembly
+# lambda_verbatim   = the authors' published-code convention (tempT omitted
+#                     from the local FM->Bernstein block), which reproduces the
+#                     published table
+#
+# Key format: <quantity>_theta<name>_n<n>
+
+lambda_consistent_theta3pi_over_4_n2=1.0293798099183669
+lambda_verbatim_theta3pi_over_4_n2=0.30768438333102816
+M_theta3pi_over_4_n2=12
+N_theta3pi_over_4_n2=24
+lambda_consistent_theta3pi_over_4_n4=1.48734650672353
+lambda_verbatim_theta3pi_over_4_n4=0.6377334144302043
+M_theta3pi_over_4_n4=42
+N_theta3pi_over_4_n4=96
+lambda_consistent_theta3pi_over_4_n8=1.6986332546835141
+lambda_verbatim_theta3pi_over_4_n8=1.0212590025859254
+M_theta3pi_over_4_n8=150
+N_theta3pi_over_4_n8=384
+lambda_consistent_theta3pi_over_4_n16=1.7745984329487487
+lambda_verbatim_theta3pi_over_4_n16=1.3425461950796975
+M_theta3pi_over_4_n16=558
+N_theta3pi_over_4_n16=1536
+lambda_consistent_theta3pi_over_4_n32=1.799042881876394
+lambda_verbatim_theta3pi_over_4_n32=1.5549529673393137
+M_theta3pi_over_4_n32=2142
+N_theta3pi_over_4_n32=6144
+lambda_consistent_thetapi_over_2_n2=4.12903225806452
+lambda_verbatim_thetapi_over_2_n2=3.282051282051288
+M_thetapi_over_2_n2=12
+N_thetapi_over_2_n2=24
+lambda_consistent_thetapi_over_2_n4=5.2164172216761395
+lambda_verbatim_thetapi_over_2_n4=3.9358234187107937
+M_thetapi_over_2_n4=42
+N_thetapi_over_2_n4=96
+lambda_consistent_thetapi_over_2_n8=5.706392471645444
+lambda_verbatim_thetapi_over_2_n8=4.708858930771742
+M_thetapi_over_2_n8=150
+N_thetapi_over_2_n8=384
+lambda_consistent_thetapi_over_2_n16=5.888917552603844
+lambda_verbatim_thetapi_over_2_n16=5.265189359310274
+M_thetapi_over_2_n16=558
+N_thetapi_over_2_n16=1536
+lambda_consistent_thetapi_over_2_n32=5.948629021648461
+lambda_verbatim_thetapi_over_2_n32=5.598809576614582
+M_thetapi_over_2_n32=2142
+N_thetapi_over_2_n32=6144
+lambda_consistent_thetapi_over_6_n2=6.551176329594577
+lambda_verbatim_thetapi_over_6_n2=6.749594713088159
+M_thetapi_over_6_n2=12
+N_thetapi_over_6_n2=24
+lambda_consistent_thetapi_over_6_n4=7.692881469039039
+lambda_verbatim_thetapi_over_6_n4=8.243024472533104
+M_thetapi_over_6_n4=42
+N_thetapi_over_6_n4=96
+lambda_consistent_thetapi_over_6_n8=9.313199759477367
+lambda_verbatim_thetapi_over_6_n8=9.313199759484963
+M_thetapi_over_6_n8=150
+N_thetapi_over_6_n8=384
+lambda_consistent_thetapi_over_6_n16=9.81613854970312
+lambda_verbatim_thetapi_over_6_n16=9.71594111120441
+M_thetapi_over_6_n16=558
+N_thetapi_over_6_n16=1536
+lambda_consistent_thetapi_over_6_n32=9.910152412817027
+lambda_verbatim_thetapi_over_6_n32=9.833883985805425
+M_thetapi_over_6_n32=2142
+N_thetapi_over_6_n32=6144

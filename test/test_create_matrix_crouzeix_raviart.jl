@@ -1,6 +1,6 @@
 # test/test_create_matrix_crouzeix_raviart.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. UnitSquare8x8 fixture: trace, sum, Frobenius norm, nnz match
 #      MATLAB element-wise to ~1e-12.
 #   2. Symmetry of A0 and A1 matrices.
@@ -10,7 +10,7 @@
 #      annihilated by the Laplacian).
 #   5. Performance: < 100 ms on this fixture.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   ∑_{i,j} A0[i, j] = ∫_Ω 1·1 dx = |Ω|     (mass times constant)
 #   A1 · ones(ne) = 0                        (Laplacian of constant)
 #   Both matrices are symmetric.

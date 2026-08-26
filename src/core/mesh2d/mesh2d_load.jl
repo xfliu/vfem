@@ -1,4 +1,4 @@
-# src/mesh2d/mesh2d_load.jl
+# src/core/mesh2d/mesh2d_load.jl
 #
 # Port of vfem2d/lib/mesh/read_mesh_from_folder.m. Reads
 #   <folder>/vert.dat   — nv × 2 floats

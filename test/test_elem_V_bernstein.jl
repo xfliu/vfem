@@ -1,6 +1,6 @@
 # test/test_elem_V_bernstein.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Constant V ≡ c: every entry of the 15-column row equals c.
 #   2. Linear V(x, y) = a·x + b·y + c0: Bernstein interpolant is
 #      exact, so the row reproduces V at the 15 control points.

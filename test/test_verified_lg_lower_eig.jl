@@ -1,6 +1,6 @@
 # test/test_verified_lg_lower_eig.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. `verified_cr_liu_lower` on UnitSquare8x8, neig = 4: returns
 #      `Vector{Interval{Float64}}` of length ≥ neig + 1; widths are
 #      ≤ 1e-10 on this fixture; the Float64 path's `cr_eig_lower`
@@ -27,7 +27,7 @@
 #   7. Performance: `verified_cr_liu_lower` < 30 s on this fixture
 #      (cluster expansion can be slow on degenerate eigenvalues).
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For the Dirichlet Laplacian on Ω, every concrete eigenvalue λ_k
 #   satisfies `inf(verified_cr_liu_lower[k]) ≤ λ_k`. The verified LG
 #   transform `λ_low(μ) = ρ − ρ / (1 − μ)` is monotone in μ for the

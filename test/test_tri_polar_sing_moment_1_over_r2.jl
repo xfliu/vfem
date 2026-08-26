@@ -1,6 +1,6 @@
 # test/test_tri_polar_sing_moment_1_over_r2.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Right triangle (0,0),(1,0),(0,1), 1 ≤ m+n ≤ 4
 #   2. 60° corner triangle
 #   3. Narrow triangle
@@ -13,7 +13,7 @@
 #  10. Interval inputs enclose Float64 result
 #  11. Performance: < 10 µs per call
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For each (m, n) with 1 ≤ m+n ≤ 4 and the panel of triangles, the
 #   closed-form result matches `ref_polar_inv_r2` (independent Gauss
 #   reference) to relative tolerance 1e-8. Recurrence-based K_k vs

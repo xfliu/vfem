@@ -1,4 +1,4 @@
-# src/bernstein/simplex_dof.jl
+# src/core/bernstein/simplex_dof.jl
 #
 # Number of multi-indices α ∈ ℤ^{n+1}_{≥0} with |α| = M, equivalently
 # the dimension of the space of polynomials of total degree ≤ M on an

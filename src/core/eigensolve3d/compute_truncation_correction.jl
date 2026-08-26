@@ -1,4 +1,4 @@
-# src/eigensolve3d/compute_truncation_correction.jl
+# src/core/eigensolve3d/compute_truncation_correction.jl
 #
 # Port of VFEM3D/lib/eigensolve/compute_truncation_correction.m.
 #

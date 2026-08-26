@@ -1,4 +1,4 @@
-# src/assembly2d/dunavant_rule_6.jl
+# src/core/assembly2d/dunavant_rule_6.jl
 #
 # 6-point Dunavant quadrature rule, exact for polynomials of total
 # degree ≤ 4 on a triangle. Port of the local helper in

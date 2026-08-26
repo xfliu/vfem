@@ -1,4 +1,4 @@
-# src/eigensolve2d/rt_hdiv_problem.jl
+# src/core/eigensolve2d/rt_hdiv_problem.jl
 #
 # Port of vfem2d/lib/eigensolve/RT_Hdiv_problem.m (~480 LOC of MATLAB).
 #

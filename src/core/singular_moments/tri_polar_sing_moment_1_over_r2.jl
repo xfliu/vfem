@@ -1,4 +1,4 @@
-# src/singular_moments/tri_polar_sing_moment_1_over_r2.jl
+# src/core/singular_moments/tri_polar_sing_moment_1_over_r2.jl
 #
 # Closed-form value of  ∫_K (1/r²) x^m y^n dxdy  on a triangle K with
 # vertices (0,0), (r1,t1), (r2,t2). Supports 1 ≤ m+n ≤ 4. The case

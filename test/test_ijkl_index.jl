@@ -1,6 +1,6 @@
 # test/test_ijkl_index.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. M = 0 -> only (0,0,0,0) at idx 1
 #   2. Round-trip identity for every M in 0..5: list[k,:] -> idx -> k
 #   3. ijkl_index_map equals ijkl_index for every entry

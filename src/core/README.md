@@ -12,15 +12,15 @@ belongs in `src/applications/<name>/`, not here.
 
 | Directory                | Role                                                       |
 | ------------------------ | ---------------------------------------------------------- |
-| `singular_moments/`      | Closed-form ∫_K (1/r), (1/r²), polynomial moments (2D).    |
+| `singular_moments/`      | Closed-form ∫_K (1/r), (1/r²), polynomial moments over a triangle. Consumed by `quadrature_singular/` for the 3D face integrals. |
 | `bernstein/`             | Bernstein polynomial kernel: multi-indices, products, Gram. |
 | `quadrature_singular/`   | Vertex-singular Coulomb-style closed forms (3D faces, tets). |
 | `mesh/`                  | Tetrahedral mesh layer (Mesh3D, facet/edge connectivity).  |
 | `mesh2d/`                | Triangular mesh layer (Mesh2D, tri↔edge maps, h_max).      |
 | `assembly2d/`            | 2D matrix builders: CR, ECR, CECR, Lagrange P1/P2.         |
-| `assembly3d/`            | 3D matrix builders: ECR, CECR.                             |
+| `assembly3d/`            | 3D matrix builders: CR, ECR, CECR, Lagrange, DG, Raviart-Thomas. |
 | `eigensolve2d/`          | 2D Schrödinger / Laplace eigensolvers + LG sharpening.     |
-| `eigensolve3d/`          | 3D CECR Schrödinger eigensolver, truncation correction.    |
+| `eigensolve3d/`          | 3D eigensolvers: CECR Schrödinger, verified CR Laplace, Lehmann-Goerisch lower bounds, one-piece bubble, truncation correction. |
 | `potentials/`            | Coulomb potential helpers (multi-center, generic).         |
 
 ## Conventions

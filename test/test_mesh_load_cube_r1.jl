@@ -4,7 +4,7 @@
 # combinatorial outputs + mesh_info) against MATLAB R2024a on the
 # canonical 27-node, 40-element cube_r1 fixture mesh.
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Counts: NumNode, NumElt, NumF, NumEdge match.
 #   2. mesh_info: h_max, h_min, C_h, vol_total, vol_min, vol_max match.
 #   3. FacetList: every row matches MATLAB row-by-row (104 rows).
@@ -15,7 +15,7 @@
 #   8. Boundary detection: a facet is boundary iff Facet2Element[:, 2] == 0.
 #   9. Performance: full load < 50 ms on this fixture.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   The output of mesh_load_from_folder is a function of the input
 #   nodes.dat / elements.dat — bit-identical reproductions across
 #   runs and across MATLAB↔Julia. This is the contract, and the

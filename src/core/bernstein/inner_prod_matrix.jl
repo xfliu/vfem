@@ -1,4 +1,4 @@
-# src/bernstein/inner_prod_matrix.jl
+# src/core/bernstein/inner_prod_matrix.jl
 #
 # Reference and physical inner-product matrices for tetrahedral
 # polynomials given in *monomial* form (basis L^α).
@@ -28,12 +28,16 @@ function inner_prod_matrix(deg1::Integer, deg2::Integer, K_vol::T) where {T<:Rea
     m, n = size(L1, 1), size(L2, 1)
     A = Matrix{T}(undef, m, n)
     @inbounds for i in 1:m, j in 1:n
-        f = factorial(L1[i, 1] + L2[j, 1]) *
-            factorial(L1[i, 2] + L2[j, 2]) *
-            factorial(L1[i, 3] + L2[j, 3]) *
-            factorial(L1[i, 4] + L2[j, 4])
-        denom = factorial(deg1 + deg2 + 3)
-        A[i, j] = K_vol * (6 * T(f) / T(denom))
+        val = T(6) * K_vol
+        for q in 1:4
+            for r in 2:(L1[i, q] + L2[j, q])
+                val *= T(r)
+            end
+        end
+        for r in 2:(deg1 + deg2 + 3)
+            val /= T(r)
+        end
+        A[i, j] = val
     end
     return A
 end
@@ -65,13 +69,17 @@ function inner_prod_matrix_reference3d(deg1::Integer, deg2::Integer, deg3::Integ
     L3 = ijkl_list(deg3)
     m, n, l = size(L1, 1), size(L2, 1), size(L3, 1)
     A = Array{T, 3}(undef, m, n, l)
-    denom = factorial(deg1 + deg2 + deg3 + 3)
     @inbounds for i in 1:m, j in 1:n, k in 1:l
-        f = factorial(L1[i, 1] + L2[j, 1] + L3[k, 1]) *
-            factorial(L1[i, 2] + L2[j, 2] + L3[k, 2]) *
-            factorial(L1[i, 3] + L2[j, 3] + L3[k, 3]) *
-            factorial(L1[i, 4] + L2[j, 4] + L3[k, 4])
-        A[i, j, k] = T(6) * T(f) / T(denom)
+        val = T(6)
+        for q in 1:4
+            for r in 2:(L1[i, q] + L2[j, q] + L3[k, q])
+                val *= T(r)
+            end
+        end
+        for r in 2:(deg1 + deg2 + deg3 + 3)
+            val /= T(r)
+        end
+        A[i, j, k] = val
     end
     return A
 end

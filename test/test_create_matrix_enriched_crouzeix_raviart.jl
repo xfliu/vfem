@@ -1,6 +1,6 @@
 # test/test_create_matrix_enriched_crouzeix_raviart.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. UnitSquare8x8 fixture: trace, sum, Frobenius norm, nnz match
 #      MATLAB to ~1e-10.
 #   2. Symmetry: A ≈ A', M ≈ M'.
@@ -8,7 +8,7 @@
 #   4. Stiffness annihilates the constant: A · ones = 0 (interior dof).
 #   5. Performance: < 1 s on this fixture.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   ECR is exact via degree-2 Bernstein basis on each triangle. The
 #   resulting Gram and stiffness matrices match the no-quadrature
 #   MATLAB assembly element-wise.

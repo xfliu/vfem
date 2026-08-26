@@ -1,4 +1,4 @@
-# src/singular_moments/poly_power_linear.jl
+# src/core/singular_moments/poly_power_linear.jl
 #
 # Coefficients (ascending powers) of (c0 + c1*t)^p.
 #

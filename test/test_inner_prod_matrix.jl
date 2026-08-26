@@ -1,6 +1,6 @@
 # test/test_inner_prod_matrix.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. deg1 = deg2 = 0 -> 1×1 matrix; ∫_K 1 dV = K_vol, so A = [K_vol].
 #   2. deg1 = 1, deg2 = 0 -> column vector of ∫_K L_i dV = K_vol/4.
 #   3. deg1 = deg2 = 1 -> 4×4 Gram of {L_i}; A_{ii} = K_vol/10,
@@ -12,7 +12,7 @@
 #   8. inner_prod_matrix_reference3d slice equals inner_prod_matrix_reference
 #      when one degree is 0 (∫ L^α · L^β · 1 dV).
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   A[α, β] = ∫_K L^α L^β dV = 6 · K_vol · (α+β)! / (|α|+|β|+3)!
 #   Verified directly against the closed-form factorial expression
 #   (which is also how the routine is built — ok). Indirect cross-check:

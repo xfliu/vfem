@@ -1,6 +1,6 @@
 # test/test_elem_V_coulomb_bounds.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. cube_r1, single nucleus at the origin (Z = 1): origin lies on a
 #      vertex shared by several elements; one element on this fixture
 #      has the origin as a vertex (so d_min = 0 and V_bar = −∞ for
@@ -16,7 +16,7 @@
 #      additivity by comparing single-center vs two-identical-centers
 #      (latter doubles the bound).
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For V(x) = − Σ_c Z_c / |x − c|, V is monotone in |x − c|. The
 #   element max/min of V is therefore at points where |x − c| is
 #   min/max over K. The max distance is always at a vertex (|·−c| is

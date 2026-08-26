@@ -1,4 +1,4 @@
-# src/assembly2d/create_matrix_cecr.jl
+# src/core/assembly2d/create_matrix_cecr.jl
 #
 # Port of vfem2d/lib/fem_assembly/create_matrix_cecr.m.
 #

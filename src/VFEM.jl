@@ -20,8 +20,9 @@ module VFEM
 #                       composes the kernel with problem-specific
 #                       parameters, meshes, and reference values.
 #
-# Public API is built up phase-by-phase per plan.md. See Rule.md for the
-# non-negotiable test contract: every routine has its own test file.
+# Public API is built up phase by phase; the roadmap is in README.md.
+# The non-negotiable test contract -- every routine has its own test
+# file -- is in docs/testing-contract.md.
 # ============================================================================
 
 using LinearAlgebra
@@ -68,6 +69,7 @@ include("core/mesh2d/find_tri2edge.jl")
 include("core/mesh2d/find_is_edge_bd.jl")
 include("core/mesh2d/find_mesh_hmax.jl")
 include("core/mesh2d/mesh2d_load.jl")
+include("core/mesh2d/mesh2d_triangle_uniform.jl")
 include("core/assembly2d/dunavant_rule_6.jl")
 include("core/assembly2d/create_matrix_crouzeix_raviart.jl")
 include("core/assembly2d/create_matrix_ecr.jl")
@@ -89,10 +91,26 @@ include("core/eigensolve2d/laplace_eig_lagrange.jl")
 include("core/eigensolve2d/lg_lower_eig_bound_laplace.jl")
 include("core/eigensolve2d/verified_lg_lower_eig.jl")
 
+# ---- Phase 4e: Fujino-Morley element + L^inf interpolation constant -------
+# Replacement of Lemma 3.2 in Galindo / Ike / Liu: the FM P2 element, and the
+# inverse-free certified evaluation of lambda_{h,B} = 1/max diag(B A^-1 B').
+# `sparse_chol_pattern.jl` must precede `lambda_h_bernstein.jl` (which uses
+# `symbolic_cholesky` / `sparse_chol_shift`), and both need the FM assembly.
+include("core/assembly2d/create_matrix_fujino_morley.jl")
+include("core/eigensolve2d/sparse_chol_pattern.jl")
+include("core/eigensolve2d/lambda_h_bernstein.jl")
+
 # ---- Phase 5: 3D ECR/CECR assembly (port of VFEM3D/) ----------------------
 include("core/assembly3d/create_matrix_ecr_3d.jl")
+include("core/assembly3d/create_matrix_crouzeix_raviart_3d.jl")
 include("core/assembly3d/create_matrix_cecr_3d.jl")
+include("core/assembly3d/dg_space_3d.jl")
+include("core/assembly3d/create_matrix_lagrange_3d.jl")
+include("core/assembly3d/rt_space_3d.jl")
 include("core/eigensolve3d/schrodinger_eig_cecr_3d.jl")
+include("core/eigensolve3d/verified_cr_laplace_3d.jl")
+include("core/eigensolve3d/lg_lower_eig_bound_laplace_3d.jl")
+include("core/eigensolve3d/one_piece_bubble_laplace_3d.jl")
 include("core/eigensolve3d/compute_truncation_correction.jl")
 
 # ---- Phase 5: Coulomb potential helpers -----------------------------------
@@ -135,6 +153,8 @@ export tri_polar_sing_moment_le4_exact,
        find_tri2edge,
        find_is_edge_bd,
        find_mesh_hmax,
+       mesh2d_triangle_uniform,
+       mesh2d_triangle_uniform_check,
        dunavant_rule_6,
        create_matrix_crouzeix_raviart,
        create_matrix_ecr,
@@ -158,12 +178,87 @@ export tri_polar_sing_moment_le4_exact,
        lg_lower_eig_bound_laplace,
        verified_cr_liu_lower,
        verified_lg_transform,
+       create_matrix_fujino_morley,
+       fm_local_matrices,
+       fm_sigma,
+       fm_element_geometry,
+       fm_inv3,
+       fm_reference_elements,
+       fm_edge_signs,
+       fm_dof_values,
+       fm_bary,
+       fm_bernstein_vals,
+       fm_p2_eval,
+       fm_p2_grad,
+       symbolic_cholesky,
+       etree_sym,
+       find_in_column,
+       sparse_chol_shift,
+       ReachWorkspace,
+       solve_sparse_rhs!,
+       clear_workspace!,
+       csr_rows,
+       selinv,
+       g_all_trisolve,
+       g_all_selinv,
+       lambda_hb_fast,
+       lambda_hb_baseline_denseD,
+       lambda_hb_baseline_denseinv,
+       baseline_cost_model,
+       verify_pd_interval,
+       verify_pd_rump,
+       lambda_min_estimate,
+       lambda_min_lower,
+       rigorous_Az,
+       rigorous_dot,
+       rigorous_sumsq,
+       certified_g_lower,
+       certified_g_upper,
+       refine_solve,
+       lambda_hb_certified,
+       lambda_hb_certified_denseinv,
+       certified_diag_Ainv_upper,
+       screen_sharp,
+       CL_ub,
+       CL_ub_interval,
        find_mesh_hmax_3d,
        EcrDof3D,
        create_matrix_ecr_3d,
+       CrDof3D,
+       create_matrix_crouzeix_raviart_3d,
        create_matrix_cecr_3d,
+       DgDof3D,
+       dg_l2g_3d,
+       create_matrix_dg_3d,
+       debug_dg_3d,
+       LagrangeDof3D,
+       lagrange_l2g_3d,
+       create_matrix_lagrange_3d,
+       LaplaceEigLagrange3D,
+       laplace_eig_lagrange_3d,
+       debug_lagrange_3d,
+       RtData3D,
+       create_matrix_rt_3d,
+       debug_rt_3d,
        SchrodingerEig3D,
        schrodinger_eig_cecr_3d,
+       CrLaplaceEig3D,
+       verified_cr_laplace_3d,
+       special_tetrahedron_mesh,
+       red_refine_mesh_3d,
+       special_tetrahedron_red_mesh,
+       LGLaplaceLowerBound3D,
+       VerifiedLGLaplaceLowerBound3D,
+       cr_liu_lower_bounds_3d,
+       verified_cr_liu_lower_3d,
+       rt_hdiv_problem_3d,
+       verified_rt_hdiv_problem_3d,
+       lg_lower_eig_bound_laplace_3d,
+       verified_lg_lower_eig_bound_laplace_3d,
+       OnePieceBubbleLaplace3D,
+       one_piece_bubble_laplace_matrices_3d,
+       one_piece_bubble_laplace_3d,
+       special_tetrahedron_vertices,
        TruncationParams,
        compute_truncation_correction,
        CoulombInfo,

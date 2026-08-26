@@ -1,4 +1,4 @@
-# src/mesh/dof_on_facet.jl
+# src/core/mesh/dof_on_facet.jl
 #
 # Port of VFEM3D/lib/mesh/get_dof_on_facet.m and get_common_dof_on_facets.m.
 #

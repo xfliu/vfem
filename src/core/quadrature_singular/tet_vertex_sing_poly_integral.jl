@@ -1,4 +1,4 @@
-# src/quadrature_singular/tet_vertex_sing_poly_integral.jl
+# src/core/quadrature_singular/tet_vertex_sing_poly_integral.jl
 #
 # Port of VFEM3D/lib/quadrature/tet_vertex_sing_poly_integral.m.
 # Wrapper combining bernstein_product_exact + tet_vertex_sing_bernstein_moments.

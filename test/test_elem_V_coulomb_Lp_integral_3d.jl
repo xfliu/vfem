@@ -1,6 +1,6 @@
 # test/test_elem_V_coulomb_Lp_integral_3d.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. cube_r1, Coulomb at (0.1, 0.1, 0.1) inside an interior element,
 #      cK = element-average V, p = 2: per-element values for the first
 #      6 elements plus sum and sumsq match MATLAB to ≤ 1e-10.
@@ -11,7 +11,7 @@
 #   4. cK length mismatch -> DimensionMismatch.
 #   5. Performance: < 5 s on this fixture.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   `I[K] = ∫_K |V(x) − cK[K]|^{p₀} dx` provides an upper bound on the
 #   L^{p₀} approximation error when V is replaced by the per-element
 #   constant `cK[K]`. The Duffy-transform `η₁²` Jacobian cancels the

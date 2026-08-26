@@ -1,4 +1,4 @@
-# src/quadrature_singular/tet_vertex_sing_bernstein_moments.jl
+# src/core/quadrature_singular/tet_vertex_sing_bernstein_moments.jl
 #
 # Port of VFEM3D/lib/quadrature/tet_vertex_sing_bernstein_moments.m.
 #

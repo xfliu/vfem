@@ -1,6 +1,6 @@
 # test/test_rt_hdiv_problem.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. UnitSquare8x8 fixture, RT_order = 2, single all-ones f column.
 #      Result is a 1×1 matrix matching MATLAB to ≤ 1e-10.
 #   2. Same fixture, two-column f (sin/cos along the global numbering).
@@ -8,7 +8,7 @@
 #   3. Symmetry of the 2×2 result.
 #   4. RT_order < 0 -> DomainError.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For input f (Lagrange CG coefficients), `mat_b_w_w[i, j]` is the
 #   Goerisch w-w bilinear form ⟨A_RT u_i, u_j⟩ where u_i, u_j are the
 #   RT-mixed solutions driven by the i-th, j-th columns of f. Result

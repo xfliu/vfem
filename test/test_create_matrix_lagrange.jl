@@ -1,6 +1,6 @@
 # test/test_create_matrix_lagrange.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. UnitSquare8x8 fixture, V = x²+y², degree=1 (P1) and degree=2 (P2):
 #      trace, sum, Frobenius, nnz match MATLAB to ~1e-10.
 #   2. Symmetry: A ≈ A', M ≈ M' for both P1 and P2.

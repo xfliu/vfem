@@ -1,4 +1,4 @@
-# test_cases/laplace_equilateral_p5_lg_verified.jl
+# examples/laplace_equilateral_p5_lg_verified.jl
 #
 # Fully verified two-sided bound on the first Dirichlet Laplace
 # eigenvalue λ_1 of the equilateral triangle of side 1, using:

@@ -1,4 +1,4 @@
-# src/mesh/get_edge_list.jl
+# src/core/mesh/get_edge_list.jl
 #
 # Port of VFEM3D/lib/mesh/mesh_get_EdgeList.m. The MATLAB version
 # is O(NumElt × NumEdgeSoFar) due to a linear scan; we use a Set

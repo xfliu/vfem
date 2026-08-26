@@ -3,7 +3,7 @@
 # Cross-validate 2D mesh I/O + the small helpers (find_tri2edge,
 # find_is_edge_bd, find_mesh_hmax) against MATLAB on UnitSquare8x8.
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Counts: nv, nt, ne, nb match MATLAB.
 #   2. hmax matches to ≤ 1e-13.
 #   3. Boundary-edge count via bd_edge_ids matches nb.
@@ -13,7 +13,7 @@
 #      and vice versa.
 #   6. Performance: full load + invariants < 50 ms.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   Given the mesh fixture files, mesh2d_load is a deterministic
 #   function — the output struct matches MATLAB byte-for-byte on
 #   counts, hmax, tri2edge, and bd_edge_ids.

@@ -1,6 +1,6 @@
 # test/test_facet_id_at_element.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Each of the 4 local faces of a sample element returns its
 #      correct local index (1, 2, 3, 4).
 #   2. Round-trip property on a real mesh: for every (e, k),

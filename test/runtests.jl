@@ -1,7 +1,7 @@
 # test/runtests.jl
 #
 # Top-level test entry. One file per routine, lumped via include.
-# Rule.md mandate: every routine has its own test file with (a) typical,
+# docs/testing-contract.md mandate: every routine has its own test file with (a) typical,
 # (b) corner-case taxonomy at the top, (c) mathematical contract,
 # (d) at least one efficiency benchmark with regression threshold.
 
@@ -64,10 +64,22 @@ include(joinpath(@__DIR__, "support", "refmoment.jl"))
     include("test_lg_lower_eig_bound_laplace.jl")
     include("test_verified_lg_lower_eig.jl")
 
+    # Phase 4e: Fujino-Morley element + L^inf interpolation constant
+    include("test_mesh2d_triangle_uniform.jl")
+    include("test_create_matrix_fujino_morley.jl")
+    include("test_lambda_h_bernstein.jl")
+
     # Phase 5: 3D ECR/CECR assembly
     include("test_create_matrix_ecr_3d.jl")
+    include("test_create_matrix_crouzeix_raviart_3d.jl")
     include("test_create_matrix_cecr_3d.jl")
+    include("test_dg_space_3d.jl")
+    include("test_create_matrix_lagrange_3d.jl")
+    include("test_rt_space_3d.jl")
     include("test_schrodinger_eig_cecr_3d.jl")
+    include("test_verified_cr_laplace_3d.jl")
+    include("test_lg_lower_eig_bound_laplace_3d.jl")
+    include("test_one_piece_bubble_laplace_3d.jl")
     include("test_elem_V_coulomb_average.jl")
     include("test_elem_V_coulomb_bounds.jl")
     include("test_elem_V_coulomb_Lp_integral_3d.jl")

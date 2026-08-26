@@ -1,4 +1,4 @@
-# src/quadrature_singular/tri3d_invR_face_moments.jl
+# src/core/quadrature_singular/tri3d_invR_face_moments.jl
 #
 # Port of VFEM3D/lib/quadrature/tri3d_invR_face_moments.m.
 #

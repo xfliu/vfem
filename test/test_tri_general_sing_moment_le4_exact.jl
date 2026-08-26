@@ -1,6 +1,6 @@
 # test/test_tri_general_sing_moment_le4_exact.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Triangle with one vertex at the origin — must equal the polar
 #      closed-form on the same triangle.
 #   2. General triangle, origin outside (panel of cases).
@@ -12,7 +12,7 @@
 #   7. Interval inputs enclose Float64 result.
 #   8. Performance: < 30 µs per call (3× the polar routine).
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   Decomposition matches a high-order Dunavant-type Gauss quadrature
 #   on the *physical* triangle for the non-singular case (origin
 #   strictly outside K). For the origin-vertex case, decomposition

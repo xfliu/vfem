@@ -1,4 +1,4 @@
-# src/mesh/mesh_load_from_folder.jl
+# src/core/mesh/mesh_load_from_folder.jl
 #
 # Port of VFEM3D/lib/mesh/mesh_load_from_folder.m. Reads
 #   <folder>/nodes.dat     (NumNode × 3, whitespace-separated floats)

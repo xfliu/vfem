@@ -1,4 +1,4 @@
-# src/bernstein/bernstein_eval.jl
+# src/core/bernstein/bernstein_eval.jl
 #
 # Evaluation of 1D and tetrahedral Bernstein polynomials.
 # Ports of VFEM3D/lib/quadrature/Bernstein.m and Bernstein3D.m.

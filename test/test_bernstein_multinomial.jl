@@ -1,6 +1,6 @@
 # test/test_bernstein_multinomial.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. N = 0, α = (0,0,0,0) -> 1
 #   2. N = 1: each unit vertex gives 1
 #   3. N = 2: known values — (2,0,0,0)→1, (1,1,0,0)→2, (0,1,1,0)→2 etc.
@@ -11,7 +11,7 @@
 #   8. Vectorised matrix form preserves order
 #   9. Performance: < 1 µs per scalar call.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For all α with |α| = N, C(N;α) = N! / (α₁! α₂! α₃! α₄!).
 #   Sum over all α of C(N;α) equals 4^N (multinomial theorem).
 #   Verified explicitly for N = 0..5.

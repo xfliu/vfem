@@ -1,6 +1,6 @@
 # test/test_tri_polar_sing_moment_le4_exact.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Right triangle (0,0),(1,0),(0,1) — analytic m=n=0 reference value
 #   2. Equilateral-corner case (angle π/3)
 #   3. Narrow triangle, small angle
@@ -16,7 +16,7 @@
 #  13. Interval inputs enclose Float64 result.
 #  14. Performance: < 10 µs per call (m+n ≤ 4).
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For each (m, n) with m+n ≤ 4 and a representative panel of triangles,
 #   the closed-form value matches the independent Gauss-quadrature
 #   reference `ref_polar_invR` to relative tolerance 1e-9. The reference

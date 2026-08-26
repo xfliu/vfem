@@ -1,6 +1,6 @@
 # test/test_schrodinger_eig_cecr.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Laplace (V = 0) on the unit square, Dirichlet BC, neig = 6:
 #      eig_h matches MATLAB to ~1e-9; eig_lower matches MATLAB to ~1e-9;
 #      eig_lower < eig_h component-wise.
@@ -11,7 +11,7 @@
 #   5. neig = 0 -> DomainError.
 #   6. bc = :foo -> ArgumentError.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For the Dirichlet Laplacian on a domain Ω, every CECR FE eigenvalue
 #   λ_h is also a numerically computed upper bound on the truncated
 #   problem, and the Liu correction λ_h / (1 + λ_h · C_h²) is a

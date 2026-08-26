@@ -1,6 +1,6 @@
 # test/test_tri_general_sing_moment_1_over_r2.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Triangle with vertex at origin: dispatch must match polar closed form.
 #   2. General triangle, origin outside K (not strictly inside) — Gauss check.
 #   3. Triangle with reversed orientation gives the same value.
@@ -11,7 +11,7 @@
 #   8. Interval inputs enclose Float64 result.
 #   9. Performance: < 30 µs per call.
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   For triangles whose origin is *outside* K, agree with high-order
 #   Gauss quadrature on the physical triangle to relative tol 1e-7.
 #   For triangles with a vertex at the origin, match the polar

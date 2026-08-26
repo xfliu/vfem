@@ -1,6 +1,6 @@
 # test/test_compute_truncation_correction.jl
 #
-# CORNER-CASE TAXONOMY (Rule.md (b)):
+# CORNER-CASE TAXONOMY (docs/testing-contract.md (b)):
 #   1. Hydrogen-like (Λ = −0.25, C_V = 1, α = 1, R0 = 1, R = 200):
 #      R1, μ, C_tr, trunc_err match MATLAB to ≤ 1e-12.
 #   2. Heavier potential (Λ = −0.5, C_V = 2, α = 1, R0 = 1, R = 100):
@@ -12,7 +12,7 @@
 #   6. trunc_err is monotone decreasing in R (sanity).
 #   7. Performance: < 0.01 s (pure scalar arithmetic).
 #
-# MATHEMATICAL CONTRACT (Rule.md (c)):
+# MATHEMATICAL CONTRACT (docs/testing-contract.md (c)):
 #   The function returns a constant `C_tr` and a rate `μ > 0` derived
 #   from Agmon estimates such that the FE eigenvalue bound
 #   `λ_lower − C_tr · exp(−μ·R)` is a guaranteed lower bound for the

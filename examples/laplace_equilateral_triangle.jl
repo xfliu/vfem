@@ -1,4 +1,4 @@
-# test_cases/laplace_equilateral_triangle.jl
+# examples/laplace_equilateral_triangle.jl
 #
 # Worked example: Dirichlet Laplace eigenvalues and eigenfunctions on
 # an equilateral triangle of side 1. Compares Julia FE results to the
@@ -22,7 +22,7 @@
 #     (m, n) = (3, 1)   ⇒                = 13  ⇒   λ ≈ 228.099 (mult 2)
 #
 # Run with:
-#     julia --project=. test_cases/laplace_equilateral_triangle.jl
+#     julia --project=. examples/laplace_equilateral_triangle.jl
 #
 # Output: one block of numbers per refinement level — λ_h(P1), λ_h(P2),
 # the Liu CR lower bound, and the analytical reference.

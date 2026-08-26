@@ -1,4 +1,4 @@
-# src/assembly2d/elem_V_bernstein.jl
+# src/core/assembly2d/elem_V_bernstein.jl
 #
 # Port of vfem2d/lib/fem_assembly/elem_V_bernstein.m. Per-element
 # degree-4 Bernstein control values of a 2D scalar potential V(x, y).

@@ -1,4 +1,4 @@
-# src/mesh/mesh_info.jl
+# src/core/mesh/mesh_info.jl
 #
 # Port of VFEM3D/lib/mesh/mesh_info.m. Returns mesh statistics
 # relevant to the eigenvalue bounds (h_max for Liu's constant,

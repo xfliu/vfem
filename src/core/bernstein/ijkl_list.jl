@@ -1,4 +1,4 @@
-# src/bernstein/ijkl_list.jl
+# src/core/bernstein/ijkl_list.jl
 #
 # Enumerate all tetrahedral barycentric multi-indices (i,j,k,l) with
 # i+j+k+l = M. Port of VFEM3D/lib/quadrature/get_IJKL.m. The MATLAB
