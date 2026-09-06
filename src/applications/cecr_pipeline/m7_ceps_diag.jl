@@ -18,7 +18,7 @@
 # B_reg ≥ M_h in the PSD sense.
 
 using Arpack: eigs
-using SparseArrays: spzeros
+using SparseArrays: spzeros, sparse, dropzeros!
 
 const _M7_TAU = 1.0e-3   # regularization coefficient for B_reg = M_h + τ K_h
 
@@ -96,7 +96,13 @@ end
 function _assemble_Dh_2d(m::Mesh2D, centers::Matrix{Float64},
                           charges::Vector{Float64})
     nv = m.nv
-    D = spzeros(Float64, nv, nv)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC
+    # (`X[i,j] +=` inserts on a new entry: an O(nnz) memmove, so element-by-
+    # element assembly is quadratic). `dropzeros!` reproduces the original
+    # sparsity, since `+= 0.0` on a non-stored entry is a no-op in Julia.
+    Irow = Int[]; Jcol = Int[]; Dval = Float64[]
+    cap = m.nt * size(centers, 1) * 9
+    sizehint!(Irow, cap); sizehint!(Jcol, cap); sizehint!(Dval, cap)
 
     @inbounds for k in 1:m.nt
         v1, v2, v3 = m.elements[k, 1], m.elements[k, 2], m.elements[k, 3]
@@ -113,11 +119,12 @@ function _assemble_Dh_2d(m::Mesh2D, centers::Matrix{Float64},
             u3, w3 = x3 - ax, y3 - ay
             D_loc = _Dh_local_2d_exact(u1, w1, u2, w2, u3, w3)
             for i in 1:3, j in 1:3
-                D[vids[i], vids[j]] += Z * D_loc[i, j]
+                push!(Irow, vids[i]); push!(Jcol, vids[j])
+                push!(Dval, Z * D_loc[i, j])
             end
         end
     end
-    return D
+    return dropzeros!(sparse(Irow, Jcol, Dval, nv, nv))
 end
 
 """
@@ -202,7 +209,13 @@ end
 function _assemble_Dh_3d(m::Mesh3D, centers::Matrix{Float64},
                           charges::Vector{Float64})
     nv = m.NumNode
-    D = spzeros(Float64, nv, nv)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC
+    # (`X[i,j] +=` inserts on a new entry: an O(nnz) memmove, so element-by-
+    # element assembly is quadratic). `dropzeros!` reproduces the original
+    # sparsity, since `+= 0.0` on a non-stored entry is a no-op in Julia.
+    Irow = Int[]; Jcol = Int[]; Dval = Float64[]
+    sizehint!(Irow, m.NumElt * 16); sizehint!(Jcol, m.NumElt * 16)
+    sizehint!(Dval, m.NumElt * 16)
 
     # 4-point Gauss-Legendre on [0,1].
     xi_gl, wi_gl = _gauss_legendre_01(4)
@@ -241,19 +254,20 @@ function _assemble_Dh_3d(m::Mesh3D, centers::Matrix{Float64},
                 # Nucleus at vertex sv: exact singular moments (N=1 = P1 Bernstein)
                 local_D, _ = singular_potential_matrix_vertex_exact(LocalNodes, sv, 1)
                 for i in 1:4, j in 1:4
-                    D[vids[i], vids[j]] += Z * local_D[i, j]
+                    push!(Irow, vids[i]); push!(Jcol, vids[j])
+                    push!(Dval, Z * local_D[i, j])
                 end
             else
                 # Far element: conical-product Gauss-Legendre, 4 pts.
-                _add_Dh_3d_gauss!(D, vids, m, ac, Z, vol, xi_gl, wi_gl)
+                _add_Dh_3d_gauss!(Irow, Jcol, Dval, vids, m, ac, Z, vol, xi_gl, wi_gl)
             end
         end
     end
-    return D
+    return dropzeros!(sparse(Irow, Jcol, Dval, nv, nv))
 end
 
 # Conical-product GL quadrature contribution to D_h on a far element.
-function _add_Dh_3d_gauss!(D, vids, m::Mesh3D, ac, Z::Float64,
+function _add_Dh_3d_gauss!(Irow, Jcol, Dval, vids, m::Mesh3D, ac, Z::Float64,
                              vol::Float64,
                              xi::Vector{Float64}, wi::Vector{Float64})
     n = length(xi)
@@ -277,7 +291,8 @@ function _add_Dh_3d_gauss!(D, vids, m::Mesh3D, ac, Z::Float64,
         w = wi[i1] * wi[i2] * wi[i3] * jac * 6 * vol
 
         for i in 1:4, j in 1:4
-            D[vids[i], vids[j]] += Z * lams[i] * lams[j] / max(r, 1e-15) * w
+            push!(Irow, vids[i]); push!(Jcol, vids[j])
+            push!(Dval, Z * lams[i] * lams[j] / max(r, 1e-15) * w)
         end
     end
 end
@@ -305,8 +320,13 @@ function ceps_diagnostic_3d(m::Mesh3D, centers::Matrix{Float64},
     n_int = length(int_nodes)
 
     # P1 stiffness and mass (no potential).
-    K_h = spzeros(Float64, n_int, n_int)
-    M_h = spzeros(Float64, n_int, n_int)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC
+    # (`X[i,j] +=` inserts on a new entry: an O(nnz) memmove, so element-by-
+    # element assembly is quadratic). `dropzeros!` reproduces the original
+    # sparsity, since `+= 0.0` on a non-stored entry is a no-op in Julia.
+    Ki = Int[]; Kj = Int[]; Kv = Float64[]; Mv = Float64[]
+    cap = m.NumElt * 16
+    sizehint!(Ki, cap); sizehint!(Kj, cap); sizehint!(Kv, cap); sizehint!(Mv, cap)
 
     @inbounds for k in 1:m.NumElt
         v1 = m.ElementList[k,1]; v2 = m.ElementList[k,2]
@@ -328,10 +348,14 @@ function ceps_diagnostic_3d(m::Mesh3D, centers::Matrix{Float64},
         for i in 1:4, j in 1:4
             ii=node_map[vids[i]]; jj=node_map[vids[j]]
             (ii==0||jj==0) && continue
-            K_h[ii,jj] += vol*(gx[i]*gx[j]+gy[i]*gy[j]+gz[i]*gz[j])
-            M_h[ii,jj] += vol*(i==j ? 1.0/10.0 : 1.0/20.0)
+            push!(Ki, ii); push!(Kj, jj)
+            push!(Kv, vol*(gx[i]*gx[j]+gy[i]*gy[j]+gz[i]*gz[j]))
+            push!(Mv, vol*(i==j ? 1.0/10.0 : 1.0/20.0))
         end
     end
+
+    K_h = dropzeros!(sparse(Ki, Kj, Kv, n_int, n_int))
+    M_h = dropzeros!(sparse(Ki, Kj, Mv, n_int, n_int))
 
     # D_h (restrict to interior nodes)
     D_full = _assemble_Dh_3d(m, centers, charges)

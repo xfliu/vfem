@@ -7,7 +7,7 @@
 # so the k smallest P1 eigenvalues are found efficiently.
 # MATLAB uses eigs(A, M, neig, -3.0) which is also shift-invert at -3.0.
 
-using SparseArrays: spzeros
+using SparseArrays: spzeros, sparse, dropzeros!
 using LinearAlgebra: det, dot
 
 # ----- 2D helpers -----------------------------------------------------------
@@ -68,8 +68,14 @@ function _p1_ub_3d_assembly(m::Mesh3D, c_h::AbstractVector{Float64}, neig::Int)
     end
     n_int = length(int_nodes)
 
-    A = spzeros(Float64, n_int, n_int)
-    M = spzeros(Float64, n_int, n_int)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC
+    # (`X[i,j] +=` inserts on a new entry: an O(nnz) memmove, so element-by-
+    # element assembly is quadratic). `dropzeros!` reproduces the original
+    # sparsity, since `+= 0.0` on a non-stored entry is a no-op in Julia.
+    cap = m.NumElt * 16
+    Irow = Int[]; Jcol = Int[]; Aval = Float64[]; Mval = Float64[]
+    sizehint!(Irow, cap); sizehint!(Jcol, cap)
+    sizehint!(Aval, cap); sizehint!(Mval, cap)
 
     @inbounds for k in 1:m.NumElt
         v1 = m.ElementList[k, 1]; v2 = m.ElementList[k, 2]
@@ -104,10 +110,13 @@ function _p1_ub_3d_assembly(m::Mesh3D, c_h::AbstractVector{Float64}, neig::Int)
 
             k_val = vol * (gx[i]*gx[j] + gy[i]*gy[j] + gz[i]*gz[j])
             m_val = vol * (i == j ? 1.0/10.0 : 1.0/20.0)
-            A[ii, jj] += k_val + ck * m_val
-            M[ii, jj] += m_val
+            push!(Irow, ii); push!(Jcol, jj)
+            push!(Aval, k_val + ck * m_val); push!(Mval, m_val)
         end
     end
+
+    A = dropzeros!(sparse(Irow, Jcol, Aval, n_int, n_int))
+    M = dropzeros!(sparse(Irow, Jcol, Mval, n_int, n_int))
 
     k_eff = min(neig, n_int - 1)
     return _shift_invert_eigs(A, M, k_eff, -3.0)
