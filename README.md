@@ -1,27 +1,41 @@
-# vfem3d
+# vfem
 
-**Verified finite element method on 3D tetrahedral domains.** Guaranteed,
-computer-assisted eigenvalue bounds for the Dirichlet Laplacian and for
-Schrödinger operators with singular (Coulomb) potentials.
+**Verified finite element method in 2D and 3D.** Guaranteed, computer-assisted
+eigenvalue bounds for the Dirichlet Laplacian and for Schrödinger operators
+with singular (Coulomb) potentials, on triangular and tetrahedral meshes.
 
 Every bound this library produces is an *enclosure*, not an estimate: run the
 same routine with `T = Interval{Float64}` and the result is a rigorous interval
 that provably contains the true value, with all rounding accounted for.
 
-The Julia module is named `VFEM`; this repository is `vfem3d`.
+The Julia module is named `VFEM`; this repository is `vfem`.
 
-> **Status: development.** The kernel is complete and cross-validated against
-> the MATLAB `VFEM_LIB` reference implementation (7530 assertions, all
-> passing). The application drivers (Hydrogen, H₂⁺) are not yet ported — see
-> [Roadmap](#roadmap).
+> **Status: development.** The kernel is complete in both dimensions and
+> cross-validated against the MATLAB reference implementations (7530
+> assertions, all passing). The 3D application drivers (Hydrogen, H₂⁺) are not
+> yet ported — see [Roadmap](#roadmap).
+
+> Formerly published as `vfem3d`. The old URL redirects here.
 
 ---
 
-## Scope: 3D is the target
+## Scope: both dimensions
 
-The library is built for **tetrahedral meshes of 3D domains**. That is where
-the element spaces, the eigensolvers, the singular-potential quadrature and
-the verified drivers all live:
+The library covers **triangular meshes in 2D** and **tetrahedral meshes in
+3D**, in parallel directory trees. The 2D half is a direct port of the MATLAB
+`VFEM2D` library — 17 source files carry a `# Port of vfem2d/….m` header — and
+is complete. The 3D half is where current development is concentrated.
+
+### 2D — triangular meshes
+
+| Layer | What it covers |
+| --- | --- |
+| `src/core/mesh2d/` | `Mesh2D`: triangles, edges, tri↔edge connectivity, uniform and graded meshes |
+| `src/core/assembly2d/` | CR, ECR, enriched CR, CECR, Lagrange P_k, Fujino–Morley; Dunavant quadrature |
+| `src/core/eigensolve2d/` | Laplace and Schrödinger eigensolvers, Lehmann–Goerisch RT auxiliary problem, verified LG lower bounds, certified `lambda_h_bernstein` |
+| `src/applications/cecr_pipeline/` | the m2–m7 CECR certification pipeline |
+
+### 3D — tetrahedral meshes
 
 | Layer | What it covers |
 | --- | --- |
@@ -31,8 +45,9 @@ the verified drivers all live:
 | `src/core/quadrature_singular/` | Closed-form vertex-singular integrals ∫_K 1/r, 1/r² over tets and their faces |
 | `src/core/potentials/` | Multi-centre Coulomb element averages, bounds, L^p integrals |
 
-Two supporting layers are dimension-neutral rather than 3D-specific, and are
-required by the 3D code:
+### Shared
+
+Two supporting layers are dimension-neutral and are required by the 3D code:
 
 - `src/core/bernstein/` — Bernstein multi-index machinery and Gram matrices on
   the reference simplex, used by the 3D quadrature.
@@ -40,41 +55,37 @@ required by the 3D code:
   *triangle*. The 3D vertex-singular tetrahedron integrals reduce to these
   over the tetrahedron's faces (`tri3d_invR_face_moments`).
 
-### The 2D companion layer
+### How the two halves relate
 
-The repository also carries a complete 2D triangular implementation
-(`mesh2d/`, `assembly2d/`, `eigensolve2d/`, and the CECR certification
-pipeline in `src/applications/cecr_pipeline/`). It is kept deliberately:
-
-- it is the cross-validation baseline — the 2D and 3D paths share the Liu
+- The 2D path is the **cross-validation baseline**: 2D and 3D share the Liu
   constant machinery and the Lehmann–Goerisch transform, and the 2D results
-  are checked against closed forms on the equilateral triangle;
-- the CECR m2–m7 certification pipeline is 2D today and is the template for
-  its 3D counterpart.
+  are checked against closed forms on the equilateral triangle.
+- The CECR m2–m7 certification pipeline is **2D today** and is the template
+  for its 3D counterpart.
 
-**The 3D code does not depend on it.** No file under `assembly3d/`,
+**The two halves are independent.** No file under `assembly3d/`,
 `eigensolve3d/`, `potentials/`, or `quadrature_singular/` references any
-2D-only symbol, so the 3D half can be used — or extracted — on its own.
+2D-only symbol, so either half can be used — or extracted — on its own.
 
 ---
 
 ## Installation
 
-`vfem3d` depends on [`Veigs`](https://github.com/xfliu/veigs) for verified
+`vfem` depends on [`Veigs`](https://github.com/xfliu/veigs) for verified
 generalized eigenvalue enclosures. It is not in the Julia General registry, so
 install it explicitly first:
 
 ```julia
 using Pkg
 Pkg.add(url = "https://github.com/xfliu/veigs", subdir = "VEIGS.jl")
-Pkg.add(url = "https://github.com/xfliu/vfem3d")
+Pkg.add(url = "https://github.com/xfliu/vfem")
 ```
 
 To work on the library itself:
 
 ```bash
-git clone https://github.com/xfliu/vfem3d.git
-cd vfem3d
+git clone https://github.com/xfliu/vfem.git
+cd vfem
 julia --project=. -e 'using Pkg; Pkg.add(url="https://github.com/xfliu/veigs", subdir="VEIGS.jl"); Pkg.instantiate()'
 julia --project=. -e 'using Pkg; Pkg.test()'
 ```
@@ -179,19 +190,29 @@ the eigensolve, so a bound computed in interval mode is valid as a proof.
 `elem_V_coulomb_average`, `elem_V_coulomb_bounds`,
 `elem_V_coulomb_Lp_integral_3d` — all closed-form, all interval-capable.
 
-### 2D companion
+### 2D element spaces and drivers (`src/core/assembly2d/`, `eigensolve2d/`)
 
-CR / ECR / CECR / Lagrange / Fujino–Morley assembly, the 2D Schrödinger and
-Laplace eigensolvers, the Lehmann–Goerisch RT auxiliary problem, the certified
-`lambda_h_bernstein` interpolation constant, and the m2–m7 CECR certification
-pipeline.
+| Space / driver | Function |
+| --- | --- |
+| Crouzeix–Raviart | `create_matrix_crouzeix_raviart` |
+| ECR / enriched CR | `create_matrix_ecr`, `create_matrix_enriched_crouzeix_raviart` |
+| CECR | `create_matrix_cecr` |
+| Lagrange P_k | `create_matrix_lagrange` |
+| Fujino–Morley | `create_matrix_fujino_morley` |
+| Laplace eigenvalues | `laplace_eig_lagrange`, `lg_lower_eig_bound_laplace` |
+| Schrödinger (CECR) | `schrodinger_eig_cecr` |
+| Verified LG lower bounds | `verified_lg_lower_eig` |
+| H(div) auxiliary problem | `rt_hdiv_problem` |
+| Interpolation constant | `lambda_h_bernstein` |
+
+plus the m2–m7 CECR certification pipeline in `src/applications/cecr_pipeline/`.
 
 ---
 
 ## Repository layout
 
 ```
-vfem3d/
+vfem/
 ├── src/
 │   ├── VFEM.jl              module entry point; include order and exports
 │   ├── core/                problem-agnostic FEM kernel  (see src/core/README.md)
@@ -264,8 +285,8 @@ Deferred deliberately; reasoning recorded in
 | Repository | Relation |
 | --- | --- |
 | [`xfliu/veigs`](https://github.com/xfliu/veigs) | verified eigenvalue solver — a dependency of this package |
-| [`xfliu/VFEM2D`](https://github.com/xfliu/VFEM2D) | the 2D verified FEM code base |
-| `xfliu/VFEM_LIB` | the MATLAB reference implementation this library is ported from |
+| [`xfliu/VFEM2D`](https://github.com/xfliu/VFEM2D) | the MATLAB 2D code base that `src/core/*2d/` is ported from |
+| `xfliu/VFEM_LIB` | the MATLAB 2D/3D reference implementation (private) |
 
 ## Method
 
