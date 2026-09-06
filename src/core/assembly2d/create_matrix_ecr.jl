@@ -19,7 +19,7 @@
 # Verification: cross-validated against MATLAB to ~1e-13 entry-wise on
 # the UnitSquare8x8 fixture (208 edges, 128 elements ⇒ 336×336 matrix).
 
-using SparseArrays: spzeros, sparse, SparseMatrixCSC
+using SparseArrays: spzeros, sparse, SparseMatrixCSC, dropzeros!
 using LinearAlgebra: det
 
 # Local 4×4 DOF matrix mapping polynomial coefficients (a, b, c, d) for
@@ -87,8 +87,13 @@ function create_matrix_ecr(m::Mesh2D; T::Type = Float64)
     nt = m.nt
     ne = m.ne
     ndof = ne + nt
-    A = spzeros(T, ndof, ndof)
-    M = spzeros(T, ndof, ndof)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC:
+    # `X[i,j] +=` on a sparse matrix inserts when the entry is new (an O(nnz)
+    # memmove), which makes element-by-element assembly quadratic in size.
+    nent = nt * 16
+    Irow = Vector{Int}(undef, nent); Jcol = Vector{Int}(undef, nent)
+    Aval = Vector{T}(undef, nent);   Mval = Vector{T}(undef, nent)
+    pos = 0
 
     λ_q, w_q = dunavant_rule_6()
     nq = length(w_q)
@@ -122,9 +127,14 @@ function create_matrix_ecr(m::Mesh2D; T::Type = Float64)
         # ∫_K f = 2|K| · Σ_q w_q f(x_q).
         scaling = 2 * areaK
         for i in 1:4, j in 1:4
-            A[dof_idx[i], dof_idx[j]] += scaling * A_loc[i, j]
-            M[dof_idx[i], dof_idx[j]] += scaling * M_loc[i, j]
+            pos += 1
+            Irow[pos] = dof_idx[i]; Jcol[pos] = dof_idx[j]
+            Aval[pos] = scaling * A_loc[i, j]
+            Mval[pos] = scaling * M_loc[i, j]
         end
     end
+    A = dropzeros!(sparse(Irow, Jcol, Aval, ndof, ndof))
+    M = dropzeros!(sparse(Irow, Jcol, Mval, ndof, ndof))
+
     return A, M
 end

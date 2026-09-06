@@ -18,7 +18,7 @@
 # pipeline. Cross-validated against MATLAB on a small fixture in the
 # corresponding test file.
 
-using SparseArrays: spzeros, sparse, SparseMatrixCSC
+using SparseArrays: spzeros, sparse, SparseMatrixCSC, dropzeros!
 using LinearAlgebra: tr, det, I
 
 # ---- Multi-index helpers ----------------------------------------------------
@@ -424,8 +424,14 @@ function rt_hdiv_problem(m::Mesh2D, RT_order::Integer, f::AbstractMatrix)
     int_per_elem = RT_order * rt_dof_count
     ndof_RT = rt_dof_count * ne + int_per_elem * nt
 
-    A_mat = spzeros(Float64, ndof_RT, ndof_RT)
-    B_mat = spzeros(Float64, ndof_RT, n_dg)
+    # COO triplets + one `sparse` call, not scatter-adds into a CSC: `A[i,j] +=`
+    # on a sparse matrix inserts when the entry is new, an O(nnz) memmove, which
+    # makes element-by-element assembly quadratic in problem size.
+    nnzA = nt * nbasis * nbasis
+    nnzB = nt * nbasis * n_dg_elt
+    Ai = Vector{Int}(undef, nnzA); Aj = Vector{Int}(undef, nnzA); Av = Vector{Float64}(undef, nnzA)
+    Bi = Vector{Int}(undef, nnzB); Bj = Vector{Int}(undef, nnzB); Bv = Vector{Float64}(undef, nnzB)
+    pA = 0; pB = 0
     F_mat = zeros(Float64, n_dg, n_dim_f)
 
     @inbounds for k in 1:nt
@@ -450,16 +456,21 @@ function rt_hdiv_problem(m::Mesh2D, RT_order::Integer, f::AbstractMatrix)
 
         # Apply orientation sign: A_block = diag(P) · A1 · diag(P).
         for i in 1:nbasis, j in 1:nbasis
-            A_mat[g_rt[i], g_rt[j]] += P[i] * A1[i, j] * P[j]
+            pA += 1
+            Ai[pA] = g_rt[i]; Aj[pA] = g_rt[j]; Av[pA] = P[i] * A1[i, j] * P[j]
         end
         for i in 1:nbasis, j in 1:n_dg_elt
-            B_mat[g_rt[i], g_dg[j]] = P[i] * A2[i, j]
+            pB += 1
+            Bi[pB] = g_rt[i]; Bj[pB] = g_dg[j]; Bv[pB] = P[i] * A2[i, j]
         end
 
         # F block uses the global Lagrange numbering (over CG DOFs).
         g_lag = _cg_lagrange_local_to_global(m, k, RT_order)
         F_mat[g_dg, :] .= M_ip_L2 * f[g_lag, :] .* det_B
     end
+
+    A_mat = dropzeros!(sparse(Ai, Aj, Av, ndof_RT, ndof_RT))
+    B_mat = dropzeros!(sparse(Bi, Bj, Bv, ndof_RT, n_dg))
 
     # Solve the saddle-point system [A B; B^T 0] x = [0; -F].
     n = ndof_RT
@@ -554,8 +565,14 @@ function _verified_rt_assembly(m::Mesh2D, RT_order::Integer,
     int_per_elem = RT_order * rt_dof_count
     ndof_RT = rt_dof_count * ne + int_per_elem * nt
 
-    A_mat = spzeros(T, ndof_RT, ndof_RT)
-    B_mat = spzeros(T, ndof_RT, n_dg)
+    # COO triplets + one `sparse` call, not scatter-adds into a CSC: `A[i,j] +=`
+    # on a sparse matrix inserts when the entry is new, an O(nnz) memmove, which
+    # makes element-by-element assembly quadratic in problem size.
+    nnzA = nt * nbasis * nbasis
+    nnzB = nt * nbasis * n_dg_elt
+    Ai = Vector{Int}(undef, nnzA); Aj = Vector{Int}(undef, nnzA); Av = Vector{T}(undef, nnzA)
+    Bi = Vector{Int}(undef, nnzB); Bj = Vector{Int}(undef, nnzB); Bv = Vector{T}(undef, nnzB)
+    pA = 0; pB = 0
     F_mat = zeros(T, n_dg, n_dim_f)
 
     @inbounds for k in 1:nt
@@ -578,15 +595,22 @@ function _verified_rt_assembly(m::Mesh2D, RT_order::Integer,
         g_dg = _dg_local_to_global(k, n_dg_elt)
 
         for i in 1:nbasis, j in 1:nbasis
-            A_mat[g_rt[i], g_rt[j]] += interval(P[i] * P[j]) * A1[i, j]
+            pA += 1
+            Ai[pA] = g_rt[i]; Aj[pA] = g_rt[j]
+            Av[pA] = interval(P[i] * P[j]) * A1[i, j]
         end
         for i in 1:nbasis, j in 1:n_dg_elt
-            B_mat[g_rt[i], g_dg[j]] = interval(P[i]) * M_dvdg[i, j]
+            pB += 1
+            Bi[pB] = g_rt[i]; Bj[pB] = g_dg[j]
+            Bv[pB] = interval(P[i]) * M_dvdg[i, j]
         end
 
         g_lag = _cg_lagrange_local_to_global(m, k, RT_order)
         F_mat[g_dg, :] .= (M_ip_L2 * f_int[g_lag, :]) .* det_B
     end
+
+    A_mat = dropzeros!(sparse(Ai, Aj, Av, ndof_RT, ndof_RT))
+    B_mat = dropzeros!(sparse(Bi, Bj, Bv, ndof_RT, n_dg))
 
     return A_mat, B_mat, F_mat, ndof_RT, n_dg
 end

@@ -5,7 +5,7 @@
 # MATLAB's `get_IJKL` convention.
 
 using LinearAlgebra: Symmetric, dot, eigvals
-using SparseArrays: spzeros, SparseMatrixCSC, nnz
+using SparseArrays: spzeros, sparse, SparseMatrixCSC, nnz, dropzeros!
 
 """
     DgDof3D
@@ -55,16 +55,23 @@ block diagonal, one full `DegK × DegK` block per tetrahedron. Passing
 """
 function create_matrix_dg_3d(m::Mesh3D, degree::Integer; T::Type = Float64)
     L2G, info = dg_l2g_3d(m, degree)
-    M = spzeros(T, info.DimDG, info.DimDG)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC:
+    # `X[i,j] +=` on a sparse matrix inserts when the entry is new (an O(nnz)
+    # memmove), which makes element-by-element assembly quadratic in size.
+    nent = m.NumElt * info.DegK * info.DegK
+    Irow = Vector{Int}(undef, nent); Jcol = Vector{Int}(undef, nent)
+    Mval = Vector{T}(undef, nent); pos = 0
     @inbounds for e in 1:m.NumElt
         vol = _tet_element_volume(m, e, T)
         vol == zero(T) && throw(DomainError(vol, "Degenerate tetrahedron"))
         Mloc = inner_prod_matrix(degree, degree, vol)
         dofs = @view L2G[e, :]
         for j in 1:info.DegK, i in 1:info.DegK
-            M[dofs[i], dofs[j]] += Mloc[i, j]
+            pos += 1
+            Irow[pos] = dofs[i]; Jcol[pos] = dofs[j]; Mval[pos] = Mloc[i, j]
         end
     end
+    M = dropzeros!(sparse(Irow, Jcol, Mval, info.DimDG, info.DimDG))
     return M, info
 end
 

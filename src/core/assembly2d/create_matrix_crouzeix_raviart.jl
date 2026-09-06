@@ -13,7 +13,7 @@
 # the side opposite vertex i. The MATLAB code uses `node(t([3,1,2]),:) −
 # node(t([2,3,1]),:)` which produces the same set of vector edges.
 
-using SparseArrays: spzeros, sparse, SparseMatrixCSC
+using SparseArrays: spzeros, sparse, SparseMatrixCSC, dropzeros!
 
 """
     create_matrix_crouzeix_raviart(m::Mesh2D; T::Type = Float64)
@@ -28,8 +28,13 @@ of `m.edges`.
 """
 function create_matrix_crouzeix_raviart(m::Mesh2D; T::Type = Float64)
     ne = m.ne
-    A0 = spzeros(T, ne, ne)
-    A1 = spzeros(T, ne, ne)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC:
+    # `X[i,j] +=` on a sparse matrix inserts when the entry is new (an O(nnz)
+    # memmove), which makes element-by-element assembly quadratic in size.
+    n0 = m.nt * 3; n1 = m.nt * 9
+    I0 = Vector{Int}(undef, n0); J0 = Vector{Int}(undef, n0); V0 = Vector{T}(undef, n0)
+    I1 = Vector{Int}(undef, n1); J1 = Vector{Int}(undef, n1); V1 = Vector{T}(undef, n1)
+    p0 = 0; p1 = 0
 
     @inbounds for k in 1:m.nt
         t = (m.elements[k, 1], m.elements[k, 2], m.elements[k, 3])
@@ -49,12 +54,17 @@ function create_matrix_crouzeix_raviart(m::Mesh2D; T::Type = Float64)
         eidx = (m.tri2edge[k, 1], m.tri2edge[k, 2], m.tri2edge[k, 3])
         # Mass: diagonal S/3 on local edge-DOFs.
         for i in 1:3
-            A0[eidx[i], eidx[i]] += S / T(3)
+            p0 += 1
+            I0[p0] = eidx[i]; J0[p0] = eidx[i]; V0[p0] = S / T(3)
         end
         # Stiffness: e_i · e_j / S.
         for i in 1:3, j in 1:3
-            A1[eidx[i], eidx[j]] += (e[i][1] * e[j][1] + e[i][2] * e[j][2]) / S
+            p1 += 1
+            I1[p1] = eidx[i]; J1[p1] = eidx[j]
+            V1[p1] = (e[i][1] * e[j][1] + e[i][2] * e[j][2]) / S
         end
     end
+    A0 = dropzeros!(sparse(I0, J0, V0, ne, ne))
+    A1 = dropzeros!(sparse(I1, J1, V1, ne, ne))
     return A0, A1
 end

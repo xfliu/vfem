@@ -6,7 +6,7 @@
 
 using Arpack: eigs
 using LinearAlgebra: Symmetric, dot, eigen, eigvals
-using SparseArrays: spzeros, SparseMatrixCSC, nnz
+using SparseArrays: spzeros, sparse, SparseMatrixCSC, nnz, dropzeros!
 
 """
     LagrangeDof3D
@@ -164,8 +164,13 @@ Dirichlet restriction.
 """
 function create_matrix_lagrange_3d(m::Mesh3D, degree::Integer; T::Type = Float64)
     L2G, info = lagrange_l2g_3d(m, degree)
-    A = spzeros(T, info.DimCG, info.DimCG)
-    M = spzeros(T, info.DimCG, info.DimCG)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC:
+    # `X[i,j] +=` on a sparse matrix inserts when the entry is new (an O(nnz)
+    # memmove), which makes element-by-element assembly quadratic in size.
+    nent = m.NumElt * info.DegK * info.DegK
+    Irow = Vector{Int}(undef, nent); Jcol = Vector{Int}(undef, nent)
+    Aval = Vector{T}(undef, nent);   Mval = Vector{T}(undef, nent)
+    pos = 0
     Mref = inner_prod_matrix_reference(degree, degree; T = T)
     Gref = inner_prod_matrix_reference(degree - 1, degree - 1; T = T)
 
@@ -200,10 +205,14 @@ function create_matrix_lagrange_3d(m::Mesh3D, degree::Integer; T::Type = Float64
         Mloc = vol .* Mref
         dofs = @view L2G[e, :]
         for j in 1:info.DegK, i in 1:info.DegK
-            A[dofs[i], dofs[j]] += Kloc[i, j]
-            M[dofs[i], dofs[j]] += Mloc[i, j]
+            pos += 1
+            Irow[pos] = dofs[i]; Jcol[pos] = dofs[j]
+            Aval[pos] = Kloc[i, j]
+            Mval[pos] = Mloc[i, j]
         end
     end
+    A = dropzeros!(sparse(Irow, Jcol, Aval, info.DimCG, info.DimCG))
+    M = dropzeros!(sparse(Irow, Jcol, Mval, info.DimCG, info.DimCG))
     return A, M, info, L2G
 end
 

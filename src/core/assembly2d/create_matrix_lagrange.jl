@@ -19,7 +19,7 @@
 #   degree=2 (P2): vertex DOFs 1..nv, then edge-midpoint DOFs nv+1..nv+ne
 #                  (ordered by the row order of `m.edges`).
 
-using SparseArrays: spzeros, sparse, SparseMatrixCSC
+using SparseArrays: spzeros, sparse, SparseMatrixCSC, dropzeros!
 
 # 6 × nbasis matrix of degree-2 Bernstein coefficients of each Lagrange
 # basis function. Same as MATLAB `local_bernstein_coeff_matrix(degree)`.
@@ -156,8 +156,13 @@ function create_matrix_lagrange(m::Mesh2D, degree::Integer,
     G1_core = T.(_ECR_G1_NUM) ./ T(12)
     W_pot   = _precompute_W_pot(degree, T)
 
-    A = spzeros(T, ndof, ndof)
-    M = spzeros(T, ndof, ndof)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC:
+    # `X[i,j] +=` on a sparse matrix inserts when the entry is new (an O(nnz)
+    # memmove), which makes element-by-element assembly quadratic in size.
+    nent = m.nt * nbasis * nbasis
+    Irow = Vector{Int}(undef, nent); Jcol = Vector{Int}(undef, nent)
+    Aval = Vector{T}(undef, nent);   Mval = Vector{T}(undef, nent)
+    pos = 0
 
     @inbounds for k in 1:m.nt
         t = (m.elements[k, 1], m.elements[k, 2], m.elements[k, 3])
@@ -198,9 +203,14 @@ function create_matrix_lagrange(m::Mesh2D, degree::Integer,
         end
 
         for i in 1:nbasis, j in 1:nbasis
-            A[g_dofs[i], g_dofs[j]] += A_local[i, j]
-            M[g_dofs[i], g_dofs[j]] += M_loc[i, j]
+            pos += 1
+            Irow[pos] = g_dofs[i]; Jcol[pos] = g_dofs[j]
+            Aval[pos] = A_local[i, j]
+            Mval[pos] = M_loc[i, j]
         end
     end
+    A = dropzeros!(sparse(Irow, Jcol, Aval, ndof, ndof))
+    M = dropzeros!(sparse(Irow, Jcol, Mval, ndof, ndof))
+
     return A, M
 end

@@ -13,7 +13,7 @@
 # and exactly represented mesh coordinates, the returned sparse matrices
 # are interval enclosures of the exact CR mass and stiffness matrices.
 
-using SparseArrays: spzeros, SparseMatrixCSC
+using SparseArrays: spzeros, sparse, SparseMatrixCSC, dropzeros!
 
 """
     CrDof3D
@@ -49,8 +49,13 @@ Dirichlet boundary conditions are not applied in this assembler. Use
 `info.interior_dofs` to restrict the pencil before solving.
 """
 function create_matrix_crouzeix_raviart_3d(m::Mesh3D; T::Type = Float64)
-    M = spzeros(T, m.NumF, m.NumF)
-    A = spzeros(T, m.NumF, m.NumF)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC:
+    # `X[i,j] +=` on a sparse matrix inserts when the entry is new (an O(nnz)
+    # memmove), which makes element-by-element assembly quadratic in size.
+    nent = m.NumElt * 16
+    Irow = Vector{Int}(undef, nent); Jcol = Vector{Int}(undef, nent)
+    Aval = Vector{T}(undef, nent);   Mval = Vector{T}(undef, nent)
+    pos = 0
 
     # For phi_i = 1 - 3 L_i:
     #   int_K phi_i^2     = 2|K|/5
@@ -92,10 +97,15 @@ function create_matrix_crouzeix_raviart_3d(m::Mesh3D; T::Type = Float64)
             gdot = grad_L[i, 1] * grad_L[j, 1] +
                    grad_L[i, 2] * grad_L[j, 2] +
                    grad_L[i, 3] * grad_L[j, 3]
-            M[dof[i], dof[j]] += vol * mass_ref[i, j]
-            A[dof[i], dof[j]] += T(9) * vol * gdot
+            pos += 1
+            Irow[pos] = dof[i]; Jcol[pos] = dof[j]
+            Mval[pos] = vol * mass_ref[i, j]
+            Aval[pos] = T(9) * vol * gdot
         end
     end
+
+    M = dropzeros!(sparse(Irow, Jcol, Mval, m.NumF, m.NumF))
+    A = dropzeros!(sparse(Irow, Jcol, Aval, m.NumF, m.NumF))
 
     return M, A, _cr3d_dof_info(m)
 end

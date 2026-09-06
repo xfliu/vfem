@@ -20,7 +20,7 @@
 # three edge DOFs + one cell DOF are nearly contiguous in the global
 # matrix.
 
-using SparseArrays: spzeros, sparse, SparseMatrixCSC
+using SparseArrays: spzeros, sparse, SparseMatrixCSC, dropzeros!
 
 # Element-independent constants (Bernstein-2 form). These are the
 # `C_cr_data`, `G2_data`, `G1_data` from the MATLAB source.
@@ -127,8 +127,13 @@ function create_matrix_enriched_crouzeix_raviart(m::Mesh2D; T::Type = Float64)
     G2_core = T.(_ECR_G2_NUM) ./ T(90)
     G1_core = T.(_ECR_G1_NUM) ./ T(12)
 
-    A = spzeros(T, ndof, ndof)
-    M = spzeros(T, ndof, ndof)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC:
+    # `X[i,j] +=` on a sparse matrix inserts when the entry is new (an O(nnz)
+    # memmove), which makes element-by-element assembly quadratic in size.
+    nent = nt * 16
+    Irow = Vector{Int}(undef, nent); Jcol = Vector{Int}(undef, nent)
+    Aval = Vector{T}(undef, nent);   Mval = Vector{T}(undef, nent)
+    pos = 0
 
     @inbounds for k in 1:nt
         t = (m.elements[k, 1], m.elements[k, 2], m.elements[k, 3])
@@ -157,9 +162,14 @@ function create_matrix_enriched_crouzeix_raviart(m::Mesh2D; T::Type = Float64)
         A_loc = areaK .* (Gx' * G1_core * Gx + Gy' * G1_core * Gy)
 
         for i in 1:4, j in 1:4
-            A[dof_idx[i], dof_idx[j]] += A_loc[i, j]
-            M[dof_idx[i], dof_idx[j]] += M_loc[i, j]
+            pos += 1
+            Irow[pos] = dof_idx[i]; Jcol[pos] = dof_idx[j]
+            Aval[pos] = A_loc[i, j]
+            Mval[pos] = M_loc[i, j]
         end
     end
+    A = dropzeros!(sparse(Irow, Jcol, Aval, ndof, ndof))
+    M = dropzeros!(sparse(Irow, Jcol, Mval, ndof, ndof))
+
     return A, M, dof_map
 end

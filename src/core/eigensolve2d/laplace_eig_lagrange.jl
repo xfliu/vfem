@@ -28,7 +28,7 @@
 # the matrix entries and eigenfunction coefficient stacks differ.
 
 using Arpack: eigs
-using SparseArrays: spzeros, SparseMatrixCSC
+using SparseArrays: spzeros, sparse, SparseMatrixCSC, dropzeros!
 using LinearAlgebra: tr, det, eigen, Hermitian
 
 """
@@ -173,8 +173,19 @@ function lagrange_laplace_matrices(m::Mesh2D, p::Integer; T::Type = Float64)
 
     nodes_T = T === Float64 ? m.nodes : convert(Matrix{T}, m.nodes)
 
-    A = spzeros(T, ndof, ndof)
-    M = spzeros(T, ndof, ndof)
+    # Global accumulation goes through COO triplets and a single `sparse`
+    # call (which sums duplicates), NOT scatter-adds into a CSC matrix.
+    # `A[i,j] += v` on a CSC has to insert into the sparse structure when the
+    # entry is new -- an O(nnz) memmove -- so element-by-element scatter is
+    # quadratic in problem size. At P3 on a 64x64 mesh that was >96% of the
+    # assembly time (memmove dominated the profile). Triplets are exact:
+    # the local blocks are unchanged, only the order of the global sum moves.
+    nentry = m.nt * nbasis_local * nbasis_local
+    Irow = Vector{Int}(undef, nentry)
+    Jcol = Vector{Int}(undef, nentry)
+    Aval = Vector{T}(undef, nentry)
+    Mval = Vector{T}(undef, nentry)
+    pos = 0
 
     @inbounds for k in 1:m.nt
         v1 = m.elements[k, 1]; v2 = m.elements[k, 2]; v3 = m.elements[k, 3]
@@ -195,10 +206,16 @@ function lagrange_laplace_matrices(m::Mesh2D, p::Integer; T::Type = Float64)
 
         g = _cg_lagrange_local_to_global(m, k, p)
         for i in 1:nbasis_local, j in 1:nbasis_local
-            A[g[i], g[j]] += A_local[i, j]
-            M[g[i], g[j]] += M_local[i, j]
+            pos += 1
+            Irow[pos] = g[i]
+            Jcol[pos] = g[j]
+            Aval[pos] = A_local[i, j]
+            Mval[pos] = M_local[i, j]
         end
     end
+
+    A = dropzeros!(sparse(Irow, Jcol, Aval, ndof, ndof))
+    M = dropzeros!(sparse(Irow, Jcol, Mval, ndof, ndof))
 
     bd_dofs = _lagrange_boundary_dofs(m, p)
     return A, M, bd_dofs

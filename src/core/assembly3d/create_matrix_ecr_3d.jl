@@ -18,7 +18,7 @@
 #
 # Returns sparse `A`, `M`, plus an `EcrDof3D` info struct.
 
-using SparseArrays: spzeros, sparse, SparseMatrixCSC
+using SparseArrays: spzeros, sparse, SparseMatrixCSC, dropzeros!
 
 # Explicit 3×3 determinant (avoids `LinearAlgebra.det` falling back to
 # `eigvals` for `Interval{Float64}` 3×3 matrices, which is wrong here).
@@ -201,8 +201,13 @@ function create_matrix_ecr_3d(m::Mesh3D; T::Type = Float64)
     D  = _bernstein_deriv_matrices3d(2, T)
     C_cr_ref = _ecr3d_cr_coeffs(T)
 
-    A = spzeros(T, ndof, ndof)
-    M = spzeros(T, ndof, ndof)
+    # COO triplets + one `sparse` call rather than scatter-adds into a CSC:
+    # `X[i,j] +=` on a sparse matrix inserts when the entry is new (an O(nnz)
+    # memmove), which makes element-by-element assembly quadratic in size.
+    nent = m.NumElt * 25
+    Irow = Vector{Int}(undef, nent); Jcol = Vector{Int}(undef, nent)
+    Aval = Vector{T}(undef, nent);   Mval = Vector{T}(undef, nent)
+    pos = 0
 
     @inbounds for e in 1:NumElt
         v1 = m.ElementList[e, 1]; v2 = m.ElementList[e, 2]
@@ -278,11 +283,16 @@ function create_matrix_ecr_3d(m::Mesh3D; T::Type = Float64)
                      m.Element2Facet[e, 3], m.Element2Facet[e, 4],
                      NumF + e)
         for i in 1:5, j in 1:5
-            A[dof_local[i], dof_local[j]] += A_local[i, j]
-            M[dof_local[i], dof_local[j]] += M_local[i, j]
+            pos += 1
+            Irow[pos] = dof_local[i]; Jcol[pos] = dof_local[j]
+            Aval[pos] = A_local[i, j]
+            Mval[pos] = M_local[i, j]
         end
     end
 
     info = EcrDof3D(ndof, NumF, NumElt, 1:NumF, (NumF + 1):(NumF + NumElt))
+    A = dropzeros!(sparse(Irow, Jcol, Aval, ndof, ndof))
+    M = dropzeros!(sparse(Irow, Jcol, Mval, ndof, ndof))
+
     return A, M, info
 end
