@@ -96,6 +96,20 @@ not portable.
 
 ---
 
+## Tutorial
+
+Twelve commented scripts in [`tutorial/`](tutorial/), building from a first Poisson
+solve to certified two-sided eigenvalue enclosures with Coulomb potentials. All
+verified against the current package.
+
+```bash
+julia --project=. tutorial/01_poisson_square.jl
+```
+
+See [`tutorial/README.md`](tutorial/README.md) for the chapter index.
+
+---
+
 ## Quick start
 
 ### Guaranteed bounds for the Dirichlet Laplacian
