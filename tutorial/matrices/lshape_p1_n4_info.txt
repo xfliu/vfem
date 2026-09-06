@@ -1,0 +1,23 @@
+name = lshape_p1_n4
+mesh = lshape_4
+lagrange_order = 1
+source = VFEM.lagrange_laplace_matrices(m, 1)  [MONOMIAL Lagrange basis]
+dof_convention = interior-restricted: A0 = A[int_dofs, int_dofs], M0 = M[int_dofs, int_dofs]; both SPD; solve A0 x = lambda M0 x
+ndof_full = 65
+n_bd = 32
+n_int = 33
+nnz_A_lower = 85
+nnz_M_lower = 106
+hmax = 3.5355339059327379e-01
+mesh_nv = 65  mesh_nt = 96  mesh_ne = 160  mesh_nb = 32
+# float reference eigenvalues of (A0, M0) from laplace_eig_lagrange:
+lambda_1 = 1.0573955451157317e+01
+lambda_2 = 1.6947623655016450e+01
+lambda_3 = 2.2819007167809119e+01
+lambda_4 = 3.6222731077005697e+01
+lambda_5 = 3.9010496207547199e+01
+lambda_6 = 5.3140863489924470e+01
+# int_dofs (1-based indices into the full ndof ordering):
+7 8 9 12 13 14 17 18 19 22 23 24 31 32 33 34 35 36 37 40 41 42 43 44 45 46 49 50 51 52 53 54 55
+# bd_dofs (removed):
+1 2 3 4 5 6 10 11 15 16 20 21 25 26 27 28 29 30 38 39 47 48 56 57 58 59 60 61 62 63 64 65

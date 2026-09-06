@@ -1,0 +1,23 @@
+name = equilateral_p1_n8
+mesh = equilateral_8
+lagrange_order = 1
+source = VFEM.lagrange_laplace_matrices(m, 1)  [MONOMIAL Lagrange basis]
+dof_convention = interior-restricted: A0 = A[int_dofs, int_dofs], M0 = M[int_dofs, int_dofs]; both SPD; solve A0 x = lambda M0 x
+ndof_full = 45
+n_bd = 24
+n_int = 21
+nnz_A_lower = 66
+nnz_M_lower = 66
+hmax = 1.2500000000000006e-01
+mesh_nv = 45  mesh_nt = 64  mesh_ne = 108  mesh_nb = 24
+# float reference eigenvalues of (A0, M0) from laplace_eig_lagrange:
+lambda_1 = 5.5395424027846815e+01
+lambda_2 = 1.3819383768232933e+02
+lambda_3 = 1.3819383768232956e+02
+lambda_4 = 2.5600000000000000e+02
+lambda_5 = 2.8261454055444875e+02
+lambda_6 = 2.8261454055444915e+02
+# int_dofs (1-based indices into the full ndof ordering):
+11 12 13 14 15 16 19 20 21 22 23 26 27 28 29 32 33 34 37 38 41
+# bd_dofs (removed):
+1 2 3 4 5 6 7 8 9 10 17 18 24 25 30 31 35 36 39 40 42 43 44 45
