@@ -85,4 +85,8 @@ include(joinpath(@__DIR__, "support", "refmoment.jl"))
     include("test_elem_V_coulomb_Lp_integral_3d.jl")
     include("test_hydrogen_e2e.jl")
     include("test_compute_truncation_correction.jl")
+
+    # CECR pipeline: m3 upper bound, m7 C_eps diagnostic
+    include("test_m3_p1_ub.jl")
+    include("test_m7_ceps_diag.jl")
 end
